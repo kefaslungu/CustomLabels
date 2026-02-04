@@ -14,41 +14,39 @@ from site_scons.site_tools.NVDATool.utils import _
 # Add-on information variables
 addon_info = AddonInfo(
 	# add-on Name/identifier, internal for NVDA
-	addon_name="addonTemplate",
+	addon_name="CustomLabels",
 	# Add-on summary/title, usually the user visible name of the add-on
 	# Translators: Summary/title for this add-on
 	# to be shown on installation and add-on information found in add-on store
-	addon_summary=_("Add-on user visible name"),
+	addon_summary=_("Custom Labels"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
-	addon_description=_("""Description for the add-on.
-It can span multiple lines."""),
+	addon_description=_("""An NVDA addon that allows you to add custom labels for unlabeled controls and edit existing ones."""),
 	# version
-	addon_version="x.y",
+	addon_version="2026.0",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
-	addon_changelog=_("""Changelog for the add-on version.
-It can span multiple lines."""),
+	addon_changelog=_("""Initial release of the Custom Labels add-on."""),
 	# Author(s)
-	addon_author="name <name@domain.com>",
+	addon_author="Kefas Lungu <jameskefaslungu@gmail.com>",
 	# URL for the add-on documentation support
-	addon_url=None,
+	addon_url="https://github.com/kefaslungu/CustomLabels",
 	# URL for the add-on repository where the source code can be found
-	addon_sourceURL=None,
+	addon_sourceURL="https://github.com/kefaslungu/CustomLabels",
 	# Documentation file name
 	addon_docFileName="readme.html",
 	# Minimum NVDA version supported (e.g. "2019.3.0", minor version is optional)
-	addon_minimumNVDAVersion=None,
+	addon_minimumNVDAVersion="2025.1",
 	# Last NVDA version supported/tested (e.g. "2024.4.0", ideally more recent than minimum version)
-	addon_lastTestedNVDAVersion=None,
+	addon_lastTestedNVDAVersion="2025.3.2",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!
 	addon_updateChannel=None,
 	# Add-on license such as GPL 2
-	addon_license=None,
+	addon_license="GPLv2",
 	# URL for the license document the ad-on is licensed under
-	addon_licenseURL=None,
+	addon_licenseURL="http://www.gnu.org/licenses/gpl-2.0.html",
 )
 
 # Define the python files that are the sources of your add-on.
@@ -59,7 +57,9 @@ It can span multiple lines."""),
 # pythonSources = ["addon/globalPlugins/*.py"]
 # For more information on SCons Glob expressions please take a look at:
 # https://scons.org/doc/production/HTML/scons-user/apd.html
-pythonSources: list[str] = []
+pythonSources: list[str] = [
+	"addon/globalPlugins/CustomLabels/*.py"
+]
 
 # Files that contain strings for translation. Usually your python sources
 i18nSources: list[str] = pythonSources + ["buildVars.py"]

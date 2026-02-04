@@ -1,0 +1,192 @@
+# NVDA Custom Labels Add-on French Translation
+# Copyright (C) 2026 Kefas Lungu
+# This file is distributed under the same license as the Custom Labels package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CustomLabels 2026.0\n"
+"Report-Msgid-Bugs-To: jameskefaslungu@gmail.com\n"
+"POT-Creation-Date: 2026-02-04 00:00+0000\n"
+"PO-Revision-Date: 2026-02-04 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: French <fr@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Translators: Summary/title for this add-on
+msgid "Custom Labels"
+msgstr "Etiquettes Personnalisées"
+
+#. Translators: Long description to be shown for this add-on
+msgid "An NVDA addon that allows you to add custom labels for unlabeled controls and edit existing ones."
+msgstr "Une extension NVDA qui vous permet d'ajouter des étiquettes personnalisées aux contrôles non étiquetés et de modifier celles existantes."
+
+#. Translators: what's new content for the add-on version
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Version initiale de l'extension Etiquettes Personnalisées."
+
+#. Translators: Description for the set custom label script
+msgid "Set or edit a custom label for the current control"
+msgstr "Définir ou modifier une étiquette personnalisée pour le contrôle actuel"
+
+#. Translators: Error message when control cannot be labeled
+msgid "Cannot label this type of control"
+msgstr "Impossible d'étiqueter ce type de contrôle"
+
+#. Translators: Error message when control cannot be identified
+msgid "Cannot identify this control"
+msgstr "Impossible d'identifier ce contrôle"
+
+#. Translators: Used when application name is unknown
+msgid "Unknown"
+msgstr "Inconnu"
+
+#. Translators: Confirmation when label is removed
+msgid "Label removed"
+msgstr "Etiquette supprimée"
+
+#. Translators: Message when there's no label to remove
+msgid "No label to remove"
+msgstr "Aucune étiquette à supprimer"
+
+#. Translators: Confirmation when label is set
+#, python-brace-format
+msgid "Label set to: {label}"
+msgstr "Etiquette définie à : {label}"
+
+#. Translators: Description for the remove custom label script
+msgid "Remove the custom label from the current control"
+msgstr "Supprimer l'étiquette personnalisée du contrôle actuel"
+
+#. Translators: Description for the check label script
+msgid "Check if current control has a custom label"
+msgstr "Vérifier si le contrôle actuel a une étiquette personnalisée"
+
+#. Translators: Message showing the custom label
+#, python-brace-format
+msgid "Custom label: {label}"
+msgstr "Etiquette personnalisée : {label}"
+
+#. Translators: Message when no custom label exists
+#, python-brace-format
+msgid "No custom label. Original: {name}"
+msgstr "Pas d'étiquette personnalisée. Original : {name}"
+
+#. Translators: Description for the manage labels script
+msgid "Open custom labels settings"
+msgstr "Ouvrir les paramètres des étiquettes personnalisées"
+
+#. Translators: Title of dialog when editing an existing label
+msgid "Edit Custom Label"
+msgstr "Modifier l'Etiquette Personnalisée"
+
+#. Translators: Title of dialog when setting a new label
+msgid "Set Custom Label"
+msgstr "Définir une Etiquette Personnalisée"
+
+#. Translators: Label for the control information list
+msgid "Control &information:"
+msgstr "&Informations sur le contrôle :"
+
+#. Translators: Column header for property name
+msgid "Property"
+msgstr "Propriété"
+
+#. Translators: Column header for property value
+msgid "Value"
+msgstr "Valeur"
+
+#. Translators: Displayed when control has no name
+msgid "(unlabeled)"
+msgstr "(sans étiquette)"
+
+#. Translators: Property name for original control name
+msgid "Original name"
+msgstr "Nom original"
+
+#. Translators: Property name for control role
+msgid "Role"
+msgstr "Rôle"
+
+#. Translators: Property name for application
+msgid "Application"
+msgstr "Application"
+
+#. Translators: Property name for control identifier
+msgid "Identifier"
+msgstr "Identifiant"
+
+#. Translators: Property name for current custom label
+msgid "Current label"
+msgstr "Etiquette actuelle"
+
+#. Translators: Label for the custom label input field
+msgid "&Custom label:"
+msgstr "Etiquette &personnalisée :"
+
+#. Translators: OK button
+msgid "&OK"
+msgstr "&OK"
+
+#. Translators: Cancel button
+msgid "&Cancel"
+msgstr "&Annuler"
+
+#. Translators: Remove button to delete the label
+msgid "&Remove"
+msgstr "&Supprimer"
+
+#. Translators: Label for the tree of custom labels
+msgid "&Available custom labels:"
+msgstr "Etiquettes personnalisées &disponibles :"
+
+#. Translators: Edit button
+msgid "&Edit"
+msgstr "&Modifier"
+
+#. Translators: Remove app button
+msgid "Remove A&pp"
+msgstr "Supprimer l'A&pplication"
+
+#. Translators: Remove all button
+msgid "Remove &All"
+msgstr "Supprimer &Tout"
+
+#. Translators: Root item in the labels tree
+msgid "All Labels"
+msgstr "Toutes les Etiquettes"
+
+#. Translators: App node showing app name and label count
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} étiquettes)"
+
+#. Translators: Label display format with identifier
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr "{label} - {identifier}"
+
+#. Translators: Shown when original name is not available
+msgid "(not available from saved data)"
+msgstr "(non disponible dans les données sauvegardées)"
+
+#. Translators: Confirmation prompt to remove a label
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "Supprimer l'étiquette '{label}' ?"
+
+#. Translators: Title for removal confirmation dialog
+msgid "Confirm Removal"
+msgstr "Confirmer la Suppression"
+
+#. Translators: Confirmation prompt to remove all labels for an app
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "Supprimer toutes les {count} étiquettes de '{app}' ?"
+
+#. Translators: Confirmation prompt to remove all custom labels
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Supprimer toutes les {count} étiquettes personnalisées ?"

@@ -1,0 +1,192 @@
+# NVDA Custom Labels Add-on Spanish Translation
+# Copyright (C) 2026 Kefas Lungu
+# This file is distributed under the same license as the Custom Labels package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: CustomLabels 2026.0\n"
+"Report-Msgid-Bugs-To: jameskefaslungu@gmail.com\n"
+"POT-Creation-Date: 2026-02-04 00:00+0000\n"
+"PO-Revision-Date: 2026-02-04 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: Spanish <es@li.org>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Translators: Summary/title for this add-on
+msgid "Custom Labels"
+msgstr "Etiquetas Personalizadas"
+
+#. Translators: Long description to be shown for this add-on
+msgid "An NVDA addon that allows you to add custom labels for unlabeled controls and edit existing ones."
+msgstr "Un complemento de NVDA que te permite agregar etiquetas personalizadas a controles sin etiquetar y editar las existentes."
+
+#. Translators: what's new content for the add-on version
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Lanzamiento inicial del complemento Etiquetas Personalizadas."
+
+#. Translators: Description for the set custom label script
+msgid "Set or edit a custom label for the current control"
+msgstr "Establecer o editar una etiqueta personalizada para el control actual"
+
+#. Translators: Error message when control cannot be labeled
+msgid "Cannot label this type of control"
+msgstr "No se puede etiquetar este tipo de control"
+
+#. Translators: Error message when control cannot be identified
+msgid "Cannot identify this control"
+msgstr "No se puede identificar este control"
+
+#. Translators: Used when application name is unknown
+msgid "Unknown"
+msgstr "Desconocido"
+
+#. Translators: Confirmation when label is removed
+msgid "Label removed"
+msgstr "Etiqueta eliminada"
+
+#. Translators: Message when there's no label to remove
+msgid "No label to remove"
+msgstr "No hay etiqueta que eliminar"
+
+#. Translators: Confirmation when label is set
+#, python-brace-format
+msgid "Label set to: {label}"
+msgstr "Etiqueta establecida a: {label}"
+
+#. Translators: Description for the remove custom label script
+msgid "Remove the custom label from the current control"
+msgstr "Eliminar la etiqueta personalizada del control actual"
+
+#. Translators: Description for the check label script
+msgid "Check if current control has a custom label"
+msgstr "Comprobar si el control actual tiene una etiqueta personalizada"
+
+#. Translators: Message showing the custom label
+#, python-brace-format
+msgid "Custom label: {label}"
+msgstr "Etiqueta personalizada: {label}"
+
+#. Translators: Message when no custom label exists
+#, python-brace-format
+msgid "No custom label. Original: {name}"
+msgstr "Sin etiqueta personalizada. Original: {name}"
+
+#. Translators: Description for the manage labels script
+msgid "Open custom labels settings"
+msgstr "Abrir configuración de etiquetas personalizadas"
+
+#. Translators: Title of dialog when editing an existing label
+msgid "Edit Custom Label"
+msgstr "Editar Etiqueta Personalizada"
+
+#. Translators: Title of dialog when setting a new label
+msgid "Set Custom Label"
+msgstr "Establecer Etiqueta Personalizada"
+
+#. Translators: Label for the control information list
+msgid "Control &information:"
+msgstr "&Información del control:"
+
+#. Translators: Column header for property name
+msgid "Property"
+msgstr "Propiedad"
+
+#. Translators: Column header for property value
+msgid "Value"
+msgstr "Valor"
+
+#. Translators: Displayed when control has no name
+msgid "(unlabeled)"
+msgstr "(sin etiquetar)"
+
+#. Translators: Property name for original control name
+msgid "Original name"
+msgstr "Nombre original"
+
+#. Translators: Property name for control role
+msgid "Role"
+msgstr "Rol"
+
+#. Translators: Property name for application
+msgid "Application"
+msgstr "Aplicación"
+
+#. Translators: Property name for control identifier
+msgid "Identifier"
+msgstr "Identificador"
+
+#. Translators: Property name for current custom label
+msgid "Current label"
+msgstr "Etiqueta actual"
+
+#. Translators: Label for the custom label input field
+msgid "&Custom label:"
+msgstr "Etiqueta &personalizada:"
+
+#. Translators: OK button
+msgid "&OK"
+msgstr "&Aceptar"
+
+#. Translators: Cancel button
+msgid "&Cancel"
+msgstr "&Cancelar"
+
+#. Translators: Remove button to delete the label
+msgid "&Remove"
+msgstr "&Eliminar"
+
+#. Translators: Label for the tree of custom labels
+msgid "&Available custom labels:"
+msgstr "Etiquetas personalizadas &disponibles:"
+
+#. Translators: Edit button
+msgid "&Edit"
+msgstr "&Editar"
+
+#. Translators: Remove app button
+msgid "Remove A&pp"
+msgstr "Eliminar A&plicación"
+
+#. Translators: Remove all button
+msgid "Remove &All"
+msgstr "Eliminar &Todo"
+
+#. Translators: Root item in the labels tree
+msgid "All Labels"
+msgstr "Todas las Etiquetas"
+
+#. Translators: App node showing app name and label count
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} etiquetas)"
+
+#. Translators: Label display format with identifier
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr "{label} - {identifier}"
+
+#. Translators: Shown when original name is not available
+msgid "(not available from saved data)"
+msgstr "(no disponible en los datos guardados)"
+
+#. Translators: Confirmation prompt to remove a label
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "Eliminar etiqueta '{label}'?"
+
+#. Translators: Title for removal confirmation dialog
+msgid "Confirm Removal"
+msgstr "Confirmar Eliminación"
+
+#. Translators: Confirmation prompt to remove all labels for an app
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "Eliminar todas las {count} etiquetas de '{app}'?"
+
+#. Translators: Confirmation prompt to remove all custom labels
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Eliminar todas las {count} etiquetas personalizadas?"
