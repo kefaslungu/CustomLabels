@@ -1,0 +1,211 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the 'CustomLabels' package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 'CustomLabels' '2026.0'\n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2026-02-04 20:01+0100\n"
+"PO-Revision-Date: 2026-02-04 20:31+0100\n"
+"Last-Translator: NetB di Leonardo Marenda <posta@netb.pro>\n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+
+#. Translators: Title of dialog when editing an existing label or setting a new label
+#: addon\globalPlugins\CustomLabels\dialogs.py:33
+msgid "Edit Custom Label"
+msgstr "Modifica etichetta personalizzata"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:33
+msgid "Set Custom Label"
+msgstr "Imposta etichetta personalizzata"
+
+#. Translators: Label for the control information list
+#: addon\globalPlugins\CustomLabels\dialogs.py:42
+msgid "Control &information:"
+msgstr "&Informazioni sul controllo:"
+
+#. Translators: Column header for property name
+#: addon\globalPlugins\CustomLabels\dialogs.py:49
+msgid "Property"
+msgstr "Proprietà"
+
+#. Translators: Column header for property value
+#: addon\globalPlugins\CustomLabels\dialogs.py:51
+msgid "Value"
+msgstr "Valore"
+
+#. Original name
+#: addon\globalPlugins\CustomLabels\dialogs.py:56
+msgid "(unlabeled)"
+msgstr "(non etichettato)"
+
+#. Translators: Property name for original control name
+#: addon\globalPlugins\CustomLabels\dialogs.py:58
+msgid "Original name"
+msgstr "Nome originale"
+
+#. Role
+#. Translators: Property name for control role
+#: addon\globalPlugins\CustomLabels\dialogs.py:64
+msgid "Role"
+msgstr "Ruolo"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:65
+#: addon\globalPlugins\CustomLabels\dialogs.py:71
+#: addon\globalPlugins\CustomLabels\__init__.py:128
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#. Application
+#. Translators: Property name for application
+#: addon\globalPlugins\CustomLabels\dialogs.py:70
+msgid "Application"
+msgstr "Applicazione"
+
+#. Translators: Property name for control identifier
+#: addon\globalPlugins\CustomLabels\dialogs.py:78
+msgid "Identifier"
+msgstr "Identificatore"
+
+#. Translators: Property name for current custom label
+#: addon\globalPlugins\CustomLabels\dialogs.py:85
+msgid "Current label"
+msgstr "Etichetta corrente"
+
+#. Translators: Label for the custom label input field
+#: addon\globalPlugins\CustomLabels\dialogs.py:90
+msgid "&Custom label:"
+msgstr "&Etichetta personalizzata:"
+
+#. Translators: OK button
+#: addon\globalPlugins\CustomLabels\dialogs.py:98
+msgid "&OK"
+msgstr "&Ok"
+
+#. Translators: Cancel button
+#: addon\globalPlugins\CustomLabels\dialogs.py:103
+msgid "&Cancel"
+msgstr "&Annulla"
+
+#. Translators: Remove button to delete the label
+#. Translators: Remove button
+#: addon\globalPlugins\CustomLabels\dialogs.py:107
+#: addon\globalPlugins\CustomLabels\dialogs.py:166
+msgid "&Remove"
+msgstr "&Rimuovi"
+
+#. Translators: Title of the settings panel
+#. Translators: The gestures category for this add-on in input gestures dialog.
+#. Add-on summary/title, usually the user visible name of the add-on
+#. Translators: Summary/title for this add-on
+#. to be shown on installation and add-on information found in add-on store
+#: addon\globalPlugins\CustomLabels\dialogs.py:138
+#: addon\globalPlugins\CustomLabels\__init__.py:56 buildVars.py:21
+msgid "Custom Labels"
+msgstr ""
+
+#. Translators: Label for the tree of custom labels
+#: addon\globalPlugins\CustomLabels\dialogs.py:147
+msgid "&Available custom labels:"
+msgstr "Etichette personalizzate &disponibili:"
+
+#. Translators: Edit button
+#: addon\globalPlugins\CustomLabels\dialogs.py:161
+msgid "&Edit"
+msgstr "&Modifica"
+
+#. Translators: Remove app button
+#: addon\globalPlugins\CustomLabels\dialogs.py:171
+msgid "Remove A&pp"
+msgstr "Rimuovi &app"
+
+#. Translators: Remove all button
+#: addon\globalPlugins\CustomLabels\dialogs.py:176
+msgid "Remove &All"
+msgstr "Rimuovi &tutto"
+
+#. Translators: Root item in the labels tree
+#: addon\globalPlugins\CustomLabels\dialogs.py:189
+msgid "All Labels"
+msgstr "Tutte le etichette"
+
+#. Translators: App node showing app name and label count
+#: addon\globalPlugins\CustomLabels\dialogs.py:200
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} etichette)"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:207
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr ""
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:277
+msgid "(not available from saved data)"
+msgstr "(non disponibile dai dati salvati)"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:306
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "Rimuovere l'etichetta '{label}'?"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:307
+#: addon\globalPlugins\CustomLabels\dialogs.py:326
+#: addon\globalPlugins\CustomLabels\dialogs.py:342
+msgid "Confirm Removal"
+msgstr "Conferma rimozione"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:325
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "Rimuovere tutte le {count} etichette per '{app}'?"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:341
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Rimuovere tutte le {count} etichette personalizzate?"
+
+#. Translators: Description for the set custom label script
+#: addon\globalPlugins\CustomLabels\__init__.py:93
+msgid "Set or edit a custom label for the current control"
+msgstr ""
+"Imposta o modifica un'etichetta personalizzata per il controllo corrente"
+
+#. Translators: Description for the remove custom label script
+#: addon\globalPlugins\CustomLabels\__init__.py:156
+msgid "Remove the custom label from the current control"
+msgstr "Rimuove l'etichetta personalizzata dal controllo corrente"
+
+#. Translators: Description for the check label script
+#: addon\globalPlugins\CustomLabels\__init__.py:176
+msgid "Check if current control has a custom label"
+msgstr "Verifica se il controllo corrente ha un'etichetta personalizzata"
+
+#. Translators: Description for the manage labels script
+#: addon\globalPlugins\CustomLabels\__init__.py:198
+msgid "Open custom labels settings"
+msgstr "Apre le impostazioni di custom labels"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-on store
+#: buildVars.py:24
+msgid ""
+"An NVDA addon that allows you to add custom labels for unlabeled controls "
+"and edit existing ones."
+msgstr ""
+"Un addon per NVDA che consente di aggiungere etichette personalizzate per "
+"controlli che ne sono sprovvisti, nonché di modificare quelle esistenti."
+
+#. Brief changelog for this version
+#. Translators: what's new content for the add-on version to be shown in the add-on store
+#: buildVars.py:29
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Versione iniziale dell'add-on Custom Labels."
