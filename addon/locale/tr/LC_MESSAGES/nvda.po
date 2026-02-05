@@ -1,0 +1,194 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Özel Etiketler\n"
+"Report-Msgid-Bugs-To: jameskefaslungu@gmail.com\n"
+"POT-Creation-Date: 2026-02-04 00:00+0000\n"
+"PO-Revision-Date: 2026-02-04 23:26+0300\n"
+"Last-Translator: Umut KORKMAZ <umutkork@gmail.com>\n"
+"Language-Team: Umut KORKMAZ <umutkork@gmail.com>\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: .\n"
+
+#. Translators: Summary/title for this add-on
+msgid "Custom Labels"
+msgstr "Özel Etiketler"
+
+#. Translators: Long description to be shown for this add-on
+msgid ""
+"An NVDA addon that allows you to add custom labels for unlabeled controls "
+"and edit existing ones."
+msgstr ""
+"Etiketlenmemiş denetimler için özel etiketler eklemenizi ve mevcut "
+"etiketleri düzenlemenizi sağlayan bir NVDA eklentisi."
+
+#. Translators: what's new content for the add-on version
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Özel Etiketler eklentisinin ilk sürümü."
+
+#. Translators: Description for the set custom label script
+msgid "Set or edit a custom label for the current control"
+msgstr "Geçerli denetim öğesi için özel bir etiket ayarlar veya düzenler"
+
+#. Translators: Error message when control cannot be labeled
+msgid "Cannot label this type of control"
+msgstr "Bu denetim türü etiketlenemiyor"
+
+#. Translators: Error message when control cannot be identified
+msgid "Cannot identify this control"
+msgstr "Bu denetim öğesi tanımlanamıyor"
+
+#. Translators: Used when application name is unknown
+msgid "Unknown"
+msgstr "Bilinmiyor"
+
+#. Translators: Confirmation when label is removed
+msgid "Label removed"
+msgstr "Etiket kaldırıldı"
+
+#. Translators: Message when there's no label to remove
+msgid "No label to remove"
+msgstr "Kaldırılacak etiket yok"
+
+#. Translators: Confirmation when label is set
+#, python-brace-format
+msgid "Label set to: {label}"
+msgstr "Etiket şu şekilde ayarlandı: {label}"
+
+#. Translators: Description for the remove custom label script
+msgid "Remove the custom label from the current control"
+msgstr "Geçerli denetim öğesinden özel etiketi kaldırır"
+
+#. Translators: Description for the check label script
+msgid "Check if current control has a custom label"
+msgstr "Geçerli denetim öğesinin özel bir etiketi olup olmadığını denetler"
+
+#. Translators: Message showing the custom label
+#, python-brace-format
+msgid "Custom label: {label}"
+msgstr "Özel etiket: {label}"
+
+#. Translators: Message when no custom label exists
+#, python-brace-format
+msgid "No custom label. Original: {name}"
+msgstr "Özel etiket yok. Orijinal: {name}"
+
+#. Translators: Description for the manage labels script
+msgid "Open custom labels settings"
+msgstr "Özel etiket ayarlarını açar"
+
+#. Translators: Title of dialog when editing an existing label
+msgid "Edit Custom Label"
+msgstr "Özel Etiketi Düzenle"
+
+#. Translators: Title of dialog when setting a new label
+msgid "Set Custom Label"
+msgstr "Özel Etiket Ayarla"
+
+#. Translators: Label for the control information list
+msgid "Control &information:"
+msgstr "Denetim öğe B&ilgileri:"
+
+#. Translators: Column header for property name
+msgid "Property"
+msgstr "Özellik"
+
+#. Translators: Column header for property value
+msgid "Value"
+msgstr "Değer"
+
+#. Translators: Displayed when control has no name
+msgid "(unlabeled)"
+msgstr "(etiketsiz)"
+
+#. Translators: Property name for original control name
+msgid "Original name"
+msgstr "Orijinal ad"
+
+#. Translators: Property name for control role
+msgid "Role"
+msgstr "Kural"
+
+#. Translators: Property name for application
+msgid "Application"
+msgstr "Uygulama"
+
+#. Translators: Property name for control identifier
+msgid "Identifier"
+msgstr "Tanımlayıcı"
+
+#. Translators: Property name for current custom label
+msgid "Current label"
+msgstr "Geçerli etiket"
+
+#. Translators: Label for the custom label input field
+msgid "&Custom label:"
+msgstr "&Özel etiket:"
+
+#. Translators: OK button
+msgid "&OK"
+msgstr "&Tamam"
+
+#. Translators: Cancel button
+msgid "&Cancel"
+msgstr "İ&ptal"
+
+#. Translators: Remove button to delete the label
+msgid "&Remove"
+msgstr "Kaldı&r"
+
+#. Translators: Label for the tree of custom labels
+msgid "&Available custom labels:"
+msgstr "&Geçerli özel etiketler:"
+
+#. Translators: Edit button
+msgid "&Edit"
+msgstr "Düz&enle"
+
+#. Translators: Remove app button
+msgid "Remove A&pp"
+msgstr "&Uygulamayı Kaldır"
+
+#. Translators: Remove all button
+msgid "Remove &All"
+msgstr "T&ümünü Kaldır"
+
+#. Translators: Root item in the labels tree
+msgid "All Labels"
+msgstr "Tüm Etiketler"
+
+#. Translators: App node showing app name and label count
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} etiketler)"
+
+#. Translators: Label display format with identifier
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr "{label} - {identifier}"
+
+#. Translators: Shown when original name is not available
+msgid "(not available from saved data)"
+msgstr "(kaydedilen verilerden kullanılamıyor)"
+
+#. Translators: Confirmation prompt to remove a label
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "'{label}' etiketi kaldırılsın mı?"
+
+#. Translators: Title for removal confirmation dialog
+msgid "Confirm Removal"
+msgstr "Kaldırmayı Onayla"
+
+#. Translators: Confirmation prompt to remove all labels for an app
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "'{app}' için tüm {count} etiketi kaldırılsın mı?"
+
+#. Translators: Confirmation prompt to remove all custom labels
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Tüm {count} özel etiketleri kaldırılsın mı?"
