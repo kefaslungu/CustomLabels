@@ -99,17 +99,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		if obj.role not in LABELABLE_ROLES:
 			# Translators: Error message when control cannot be labeled
-			ui.message("Cannot label this type of control")
+			ui.message(_("Cannot label this type of control"))
 			return
 
 		try:
 			fp = getObjectFingerprint(obj)
 			if not fp:
 				# Translators: Error message when control cannot be identified
-				ui.message("Cannot identify this control")
+				ui.message(_("Cannot identify this control"))
 				return
 		except Exception as e:
-			ui.message(f"{'Error'}: {e}")
+			# Translators: Error message with details. {error} is the error message.
+			ui.message(_("Error: {error}").format(error=e))
 			return
 
 		currentLabel = getLabel(fp)
@@ -137,14 +138,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					if dlg.result == "":
 						if removeLabel(fp):
 							# Translators: Confirmation when label is removed
-							wx.CallAfter(ui.message, "Label removed")
+							wx.CallAfter(ui.message, _("Label removed"))
 						else:
 							# Translators: Message when there's no label to remove
-							wx.CallAfter(ui.message, "No label to remove")
+							wx.CallAfter(ui.message, _("No label to remove"))
 					elif dlg.result:
 						setLabel(fp, dlg.result)
 						# Translators: Confirmation when label is set. {label} is the new label text.
-						wx.CallAfter(ui.message, "Label set to: {label}").format(label=dlg.result)
+						wx.CallAfter(ui.message, _("Label set to: {label}").format(label=dlg.result))
 			finally:
 				gui.mainFrame.postPopup()
 				dlg.Destroy()
@@ -164,12 +165,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			fp = getObjectFingerprint(obj)
 			if fp and removeLabel(fp):
 				# Translators: Confirmation when label is removed
-				ui.message("Label removed")
+				ui.message(_("Label removed"))
 			else:
 				# Translators: Message when there's no label to remove
-				ui.message("No label to remove")
+				ui.message(_("No label to remove"))
 		except Exception as e:
-			ui.message(f"{'Error'}: {e}")
+			# Translators: Error message with details. {error} is the error message.
+			ui.message(_("Error: {error}").format(error=e))
 
 	@script(
 		# Translators: Description for the check label script
@@ -186,12 +188,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 			if label:
 				# Translators: Message showing the custom label. {label} is the label text.
-				ui.message("Custom label: {label}".format(label=label))
+				ui.message(_("Custom label: {label}").format(label=label))
 			else:
 				# Translators: Message when no custom label exists. {name} is the original name.
-				ui.message("No custom label. Original: {name}".format(name=obj.name or "unlabeled"))
+				ui.message(_("No custom label. Original: {name}").format(name=obj.name or _("unlabeled")))
 		except Exception as e:
-			ui.message(f"{'Error'}: {e}")
+			# Translators: Error message with details. {error} is the error message.
+			ui.message(_("Error: {error}").format(error=e))
 
 	@script(
 		# Translators: Description for the manage labels script
