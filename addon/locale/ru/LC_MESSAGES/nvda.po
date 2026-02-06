@@ -1,0 +1,221 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom Labels 2026.0\n"
+"POT-Creation-Date: 2026-02-06 17:48+0300\n"
+"PO-Revision-Date: 2026-02-06 18:10+0300\n"
+"Last-Translator: nvda.ru\n"
+"Language-Team: Russian translation team <nvda.ru>, Danil Kostenkov "
+"<danilkostenkov38@gmail.com>\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: ../../../..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPath-1: addon/globalPlugins/CustomLabels\n"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:56
+#: addon/globalPlugins/CustomLabels/dialogs.py:138 buildVars.py:21
+msgid "Custom Labels"
+msgstr "Custom Labels (Пользовательские метки)"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:93
+msgid "Set or edit a custom label for the current control"
+msgstr ""
+"Установить или изменить пользовательскую метку для текущего элемента "
+"управления"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:102
+msgid "Cannot label this type of control"
+msgstr "Не удаётся пометить этот тип элемента управления"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:109
+msgid "Cannot identify this control"
+msgstr "Не удаётся определить этот элемент управления"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:113
+#: addon/globalPlugins/CustomLabels/__init__.py:174
+#: addon/globalPlugins/CustomLabels/__init__.py:197
+#, python-brace-format
+msgid "Error: {error}"
+msgstr "Ошибка: {error}"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:129
+#: addon/globalPlugins/CustomLabels/dialogs.py:65
+#: addon/globalPlugins/CustomLabels/dialogs.py:71
+msgid "Unknown"
+msgstr "Неизвестно"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:141
+#: addon/globalPlugins/CustomLabels/__init__.py:168
+msgid "Label removed"
+msgstr "Метка удалена"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:144
+#: addon/globalPlugins/CustomLabels/__init__.py:171
+msgid "No label to remove"
+msgstr "Нет установленных меток для удаления"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:148
+#, python-brace-format
+msgid "Label set to: {label}"
+msgstr "Метка изменена на: {label}"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:157
+msgid "Remove the custom label from the current control"
+msgstr "Удалить пользовательскую метку для текущего элемента управления"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:178
+msgid "Check if current control has a custom label"
+msgstr ""
+"Проверить, есть ли у текущего элемента управления пользовательская метка"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:191
+#, python-brace-format
+msgid "Custom label: {label}"
+msgstr "Пользовательская метка: {label}"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:194
+#, python-brace-format
+msgid "No custom label. Original: {name}"
+msgstr "Нет пользовательской метки. Исходная метка: {name}"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:194
+msgid "unlabeled"
+msgstr "без метки"
+
+#: addon/globalPlugins/CustomLabels/__init__.py:201
+msgid "Open custom labels settings"
+msgstr "Открыть настройки пользовательских меток"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:33
+msgid "Edit Custom Label"
+msgstr "Изменить пользовательскую метку"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:33
+msgid "Set Custom Label"
+msgstr "Установить пользовательскую метку"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:42
+msgid "Control &information:"
+msgstr "Сведения об элементе управления:"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:49
+msgid "Property"
+msgstr "Свойство"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:51
+msgid "Value"
+msgstr "Значение"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:56
+msgid "(unlabeled)"
+msgstr "(без метки)"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:58
+msgid "Original name"
+msgstr "Исходное имя"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:64
+msgid "Role"
+msgstr "Роль"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:70
+msgid "Application"
+msgstr "Приложение"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:78
+msgid "Identifier"
+msgstr "Идентификатор"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:85
+msgid "Current label"
+msgstr "Текущая метка"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:90
+msgid "&Custom label:"
+msgstr "Пользовательская &метка:"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:98
+msgid "&OK"
+msgstr "&OK"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:103
+msgid "&Cancel"
+msgstr "&Отмена"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:107
+#: addon/globalPlugins/CustomLabels/dialogs.py:166
+msgid "&Remove"
+msgstr "&Удалить"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:147
+msgid "&Available custom labels:"
+msgstr "&Доступные пользовательские метки:"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:161
+msgid "&Edit"
+msgstr "&Изменить"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:171
+msgid "Remove A&pp"
+msgstr "Удалить &приложение"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:176
+msgid "Remove &All"
+msgstr "Удалить &все"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:189
+msgid "All Labels"
+msgstr "Все метки"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:200
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} меток)"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:207
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr "{label} — {identifier}"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:277
+msgid "(not available from saved data)"
+msgstr "(недоступно из сохранённых данных)"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:306
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "Удалить метку «{label}»?"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:307
+#: addon/globalPlugins/CustomLabels/dialogs.py:326
+#: addon/globalPlugins/CustomLabels/dialogs.py:342
+msgid "Confirm Removal"
+msgstr "Подтверждение удаления"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:325
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "Удалить все {count} меток для «{app}»?"
+
+#: addon/globalPlugins/CustomLabels/dialogs.py:341
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Удалить все {count} пользовательских меток?"
+
+#: buildVars.py:24
+msgid ""
+"An NVDA addon that allows you to add custom labels for unlabeled controls "
+"and edit existing ones."
+msgstr ""
+"Это дополнение позволяет назначать пользовательские текстовые метки для "
+"неподписанных элементов управления и редактировать существующие."
+
+#: buildVars.py:29
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Первоначальная версия дополнения Custom Labels."
