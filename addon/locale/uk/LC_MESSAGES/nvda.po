@@ -1,0 +1,259 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: 'nvda-translations@groups.io'\n"
+"POT-Creation-Date: 2026-02-08 21:23+0200\n"
+"PO-Revision-Date: 2026-02-10 15:08+0200\n"
+"Last-Translator: Volodymyr Pyrih <vp88.mobile@gmail.com>\n"
+"Language-Team: \n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.8\n"
+"X-Poedit-Basepath: .\n"
+
+#. Translators: Title of dialog when editing an existing label or setting a new label
+#: addon\globalPlugins\CustomLabels\dialogs.py:33
+msgid "Edit Custom Label"
+msgstr "Редагувати користувацьку мітку"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:33
+msgid "Set Custom Label"
+msgstr "Встановити користувацьку мітку"
+
+#. Translators: Label for the control information list
+#: addon\globalPlugins\CustomLabels\dialogs.py:42
+msgid "Control &information:"
+msgstr "&Керування та інформація:"
+
+#. Translators: Column header for property name
+#: addon\globalPlugins\CustomLabels\dialogs.py:49
+msgid "Property"
+msgstr "Властивості"
+
+#. Translators: Column header for property value
+#: addon\globalPlugins\CustomLabels\dialogs.py:51
+msgid "Value"
+msgstr "Значення"
+
+#. Original name
+#: addon\globalPlugins\CustomLabels\dialogs.py:56
+msgid "(unlabeled)"
+msgstr "(без мітки)"
+
+#. Translators: Property name for original control name
+#: addon\globalPlugins\CustomLabels\dialogs.py:58
+msgid "Original name"
+msgstr "Оригінальна назва"
+
+#. Role
+#. Translators: Property name for control role
+#: addon\globalPlugins\CustomLabels\dialogs.py:64
+msgid "Role"
+msgstr "Роль"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:65
+#: addon\globalPlugins\CustomLabels\dialogs.py:71
+#: addon\globalPlugins\CustomLabels\__init__.py:129
+msgid "Unknown"
+msgstr "Невідомо"
+
+#. Application
+#. Translators: Property name for application
+#: addon\globalPlugins\CustomLabels\dialogs.py:70
+msgid "Application"
+msgstr "Програма"
+
+#. Translators: Property name for control identifier
+#: addon\globalPlugins\CustomLabels\dialogs.py:78
+msgid "Identifier"
+msgstr "Ідентифікатор"
+
+#. Translators: Property name for current custom label
+#: addon\globalPlugins\CustomLabels\dialogs.py:85
+msgid "Current label"
+msgstr "Поточна мітка"
+
+#. Translators: Label for the custom label input field
+#: addon\globalPlugins\CustomLabels\dialogs.py:90
+msgid "&Custom label:"
+msgstr "&Користувацька мітка:"
+
+#. Translators: OK button
+#: addon\globalPlugins\CustomLabels\dialogs.py:98
+msgid "&OK"
+msgstr "&OK"
+
+#. Translators: Cancel button
+#: addon\globalPlugins\CustomLabels\dialogs.py:103
+msgid "&Cancel"
+msgstr "&Скасувати"
+
+#. Translators: Remove button to delete the label
+#. Translators: Remove button
+#: addon\globalPlugins\CustomLabels\dialogs.py:107
+#: addon\globalPlugins\CustomLabels\dialogs.py:166
+msgid "&Remove"
+msgstr "&Видалити"
+
+#. Translators: Title of the settings panel
+#. Translators: The gestures category for this add-on in input gestures dialog.
+#. Add-on summary/title, usually the user visible name of the add-on
+#. Translators: Summary/title for this add-on
+#. to be shown on installation and add-on information found in add-on store
+#: addon\globalPlugins\CustomLabels\dialogs.py:138
+#: addon\globalPlugins\CustomLabels\__init__.py:56 buildVars.py:21
+msgid "Custom Labels"
+msgstr "Користувацькі мітки"
+
+#. Translators: Label for the tree of custom labels
+#: addon\globalPlugins\CustomLabels\dialogs.py:147
+msgid "&Available custom labels:"
+msgstr "&Доступні користувацькі мітки:"
+
+#. Translators: Edit button
+#: addon\globalPlugins\CustomLabels\dialogs.py:161
+msgid "&Edit"
+msgstr "&Редагувати"
+
+#. Translators: Remove app button
+#: addon\globalPlugins\CustomLabels\dialogs.py:171
+msgid "Remove A&pp"
+msgstr "Видалити &програму"
+
+#. Translators: Remove all button
+#: addon\globalPlugins\CustomLabels\dialogs.py:176
+msgid "Remove &All"
+msgstr "Видалити &все"
+
+#. Translators: Root item in the labels tree
+#: addon\globalPlugins\CustomLabels\dialogs.py:189
+msgid "All Labels"
+msgstr "Усі мітки"
+
+#. Translators: App node showing app name and label count
+#: addon\globalPlugins\CustomLabels\dialogs.py:200
+#, python-brace-format
+msgid "{app} ({count} labels)"
+msgstr "{app} ({count} міток)"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:207
+#, python-brace-format
+msgid "{label} - {identifier}"
+msgstr "{label} - {identifier}"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:277
+msgid "(not available from saved data)"
+msgstr "(недоступно зі збережених даних)"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:306
+#, python-brace-format
+msgid "Remove label '{label}'?"
+msgstr "Видалити мітку \"{label}\"?"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:307
+#: addon\globalPlugins\CustomLabels\dialogs.py:326
+#: addon\globalPlugins\CustomLabels\dialogs.py:342
+msgid "Confirm Removal"
+msgstr "Підтвердіть видалення"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:325
+#, python-brace-format
+msgid "Remove all {count} labels for '{app}'?"
+msgstr "Видалити всі {count} міток для \"{app}\"?"
+
+#: addon\globalPlugins\CustomLabels\dialogs.py:341
+#, python-brace-format
+msgid "Remove all {count} custom labels?"
+msgstr "Видалити всі ({count}) користувацькі мітки?"
+
+#. Translators: Description for the set custom label script
+#: addon\globalPlugins\CustomLabels\__init__.py:93
+msgid "Set or edit a custom label for the current control"
+msgstr ""
+"Встановити або відредагувати користувацьку мітку для поточного елемента "
+"керування"
+
+#. Translators: Error message when control cannot be labeled
+#: addon\globalPlugins\CustomLabels\__init__.py:102
+msgid "Cannot label this type of control"
+msgstr "Неможливо надати мітку елементу керування цього типу"
+
+#. Translators: Error message when control cannot be identified
+#: addon\globalPlugins\CustomLabels\__init__.py:109
+msgid "Cannot identify this control"
+msgstr "Неможливо визначити цей елемент керування"
+
+#. Translators: Error message with details. {error} is the error message.
+#: addon\globalPlugins\CustomLabels\__init__.py:113
+#: addon\globalPlugins\CustomLabels\__init__.py:174
+#: addon\globalPlugins\CustomLabels\__init__.py:197
+#, python-brace-format
+msgid "Error: {error}"
+msgstr "Помилка: {error}"
+
+#. Translators: Confirmation when label is removed
+#: addon\globalPlugins\CustomLabels\__init__.py:141
+#: addon\globalPlugins\CustomLabels\__init__.py:168
+msgid "Label removed"
+msgstr "Мітку видалено"
+
+#. Translators: Message when there's no label to remove
+#: addon\globalPlugins\CustomLabels\__init__.py:144
+#: addon\globalPlugins\CustomLabels\__init__.py:171
+msgid "No label to remove"
+msgstr "Немає мітки для видалення"
+
+#. Translators: Confirmation when label is set. {label} is the new label text.
+#: addon\globalPlugins\CustomLabels\__init__.py:148
+#, python-brace-format
+msgid "Label set to: {label}"
+msgstr "Встановлено мітку: {label}"
+
+#. Translators: Description for the remove custom label script
+#: addon\globalPlugins\CustomLabels\__init__.py:157
+msgid "Remove the custom label from the current control"
+msgstr "Видалити користувацьку мітку з поточного елемента керування"
+
+#. Translators: Description for the check label script
+#: addon\globalPlugins\CustomLabels\__init__.py:178
+msgid "Check if current control has a custom label"
+msgstr "Перевірити, чи має поточний елемент керування користувацьку мітку"
+
+#. Translators: Message showing the custom label. {label} is the label text.
+#: addon\globalPlugins\CustomLabels\__init__.py:191
+#, python-brace-format
+msgid "Custom label: {label}"
+msgstr "Користувацька мітка: {label}"
+
+#. Translators: Message when no custom label exists. {name} is the original name.
+#: addon\globalPlugins\CustomLabels\__init__.py:194
+#, python-brace-format
+msgid "No custom label. Original: {name}"
+msgstr "Немає користувацької мітки. Оригінал: {name}"
+
+#: addon\globalPlugins\CustomLabels\__init__.py:194
+msgid "unlabeled"
+msgstr "без мітки"
+
+#. Translators: Description for the manage labels script
+#: addon\globalPlugins\CustomLabels\__init__.py:201
+msgid "Open custom labels settings"
+msgstr "Відкрити налаштування користувацьких міток"
+
+#. Add-on description
+#. Translators: Long description to be shown for this add-on on add-on information from add-on store
+#: buildVars.py:24
+msgid ""
+"An NVDA addon that allows you to add custom labels for unlabeled controls "
+"and edit existing ones."
+msgstr ""
+"Додаток NVDA, що дозволяє додавати користувацькі мітки для елементів "
+"керування без міток та редагувати наявні."
+
+#. Brief changelog for this version
+#. Translators: what's new content for the add-on version to be shown in the add-on store
+#: buildVars.py:29
+msgid "Initial release of the Custom Labels add-on."
+msgstr "Початковий випуск додатка Користувацькі мітки."
