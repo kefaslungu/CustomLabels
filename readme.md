@@ -102,6 +102,8 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 
 ## Changelog
 
+### Version 2026.1
+* A release compartable with NVDA 2026.1.
 ### Version 2026.02
 
 * Added support for NVDA 2026.1
