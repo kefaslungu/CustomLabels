@@ -187,7 +187,35 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		)
 		self.autoDescribeCheckbox.SetValue(config.conf["customLabels"]["autoDescribe"])
 
-	def _populateTree(self):
+	def _getExpandedApps(self):
+		"""Return the set of app names whose tree nodes are currently expanded."""
+		expanded = set()
+		root = self.labelsTree.GetRootItem()
+		if not root.IsOk():
+			return expanded
+		child, cookie = self.labelsTree.GetFirstChild(root)
+		while child.IsOk():
+			if self.labelsTree.IsExpanded(child):
+				data = self._itemData.get(child)
+				if data:
+					expanded.add(data[0])
+			child, cookie = self.labelsTree.GetNextChild(root, cookie)
+		return expanded
+
+	def _getSelectedAppName(self):
+		data = self._getSelectedData()
+		if data:
+			return data[0]
+		return None
+
+	def _populateTree(self, restoreAppName=None):
+		"""Rebuild the tree, restoring expanded state and optionally re-selecting an app node.
+
+		Args:
+			restoreAppName: if given, select this app's node after rebuilding.
+		"""
+		expandedApps = self._getExpandedApps()
+
 		self.labelsTree.DeleteAllItems()
 		self._itemData.clear()
 
@@ -200,6 +228,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# Get labels grouped by app
 		labelsByApp = _labelStore.getAllByApp()
 
+		restoreItem = None
 		for appName in sorted(labelsByApp.keys()):
 			labels = labelsByApp[appName]
 			if not labels:
@@ -217,10 +246,25 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				labelItem = self.labelsTree.AppendItem(appItem, labelText)
 				self._itemData[labelItem] = (appName, fp)
 
+			# Restore expanded state for this app node
+			if appName in expandedApps:
+				self.labelsTree.Expand(appItem)
+
+			if appName == restoreAppName:
+				restoreItem = appItem
+
 		self.labelsTree.Expand(root)
-		firstChild, cookie = self.labelsTree.GetFirstChild(root)
-		if firstChild.IsOk():
-			self.labelsTree.Expand(firstChild)
+
+		# Restore selection, or fall back to expanding the first child
+		if restoreItem and restoreItem.IsOk():
+			self.labelsTree.SelectItem(restoreItem)
+		else:
+			firstChild, cookie = self.labelsTree.GetFirstChild(root)
+			if firstChild.IsOk() and firstChild not in self._itemData:
+				pass  # root only, nothing to expand
+			elif firstChild.IsOk() and not expandedApps:
+				# First open: expand the first app node by default
+				self.labelsTree.Expand(firstChild)
 
 	def _updateButtonStates(self):
 		selection = self.labelsTree.GetSelection()
@@ -261,12 +305,6 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			return None
 		return self._itemData.get(selection)
 
-	def _getSelectedAppName(self):
-		data = self._getSelectedData()
-		if data:
-			return data[0]
-		return None
-
 	def onEdit(self, evt):
 		if not _labelStore:
 			return
@@ -298,7 +336,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 				elif dlg.result:
 					_labelStore.set(fp, dlg.result)
 					log.debug(f"CustomLabels: label updated for '{appName}' via settings panel")
-				self._populateTree()
+				self._populateTree(restoreAppName=appName)
 				self._updateButtonStates()
 		except Exception:
 			log.error("CustomLabels: unexpected error in settings panel onEdit", exc_info=True)
@@ -322,7 +360,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		) == wx.YES:
 			_labelStore.remove(fp)
 			log.debug(f"CustomLabels: label '{label}' removed for '{appName}' via settings panel")
-			self._populateTree()
+			self._populateTree(restoreAppName=appName)
 			self._updateButtonStates()
 
 	def onRemoveApp(self, evt):
