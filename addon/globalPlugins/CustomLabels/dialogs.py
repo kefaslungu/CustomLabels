@@ -125,280 +125,269 @@ class SetLabelDialog(wx.Dialog):
 		self.EndModal(wx.ID_OK)
 
 
-# Global reference to labelStore, set by GlobalPlugin
-_labelStore = None
+def makeSettingsPanel(labelStore):
+	"""Return a CustomLabelsSettingsPanel class with labelStore bound at class creation time.
 
+	NVDA instantiates SettingsPanel subclasses without extra constructor arguments,
+	so the store is captured via closure rather than passed to __init__.
+	"""
 
-def setLabelStore(store):
-	"""Set the label store reference for the settings panel."""
-	global _labelStore
-	_labelStore = store
+	class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
+		"""Settings panel for managing custom labels."""
+		# Translators: Title of the settings panel
+		title = _("Custom Labels")
+		_store = labelStore
 
+		def makeSettings(self, settingsSizer):
+			sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 
-class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
-	"""Settings panel for managing custom labels."""
-	# Translators: Title of the settings panel
-	title = _("Custom Labels")
+			# Store mapping from tree items to data
+			self._itemData = {}
 
-	def makeSettings(self, settingsSizer):
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+			# Translators: Label for the tree of custom labels
+			labelsText = _("&Available custom labels:")
+			self.labelsTree = sHelper.addLabeledControl(
+				labelsText,
+				wx.TreeCtrl,
+				style=wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE
+			)
 
-		# Store mapping from tree items to data
-		self._itemData = {}
+			self._populateTree()
 
-		# Translators: Label for the tree of custom labels
-		labelsText = _("&Available custom labels:")
-		self.labelsTree = sHelper.addLabeledControl(
-			labelsText,
-			wx.TreeCtrl,
-			style=wx.TR_HAS_BUTTONS | wx.TR_LINES_AT_ROOT | wx.TR_SINGLE
-		)
+			self.labelsTree.Bind(wx.EVT_TREE_SEL_CHANGED, self.onTreeSelChanged)
 
-		self._populateTree()
+			bHelper = sHelper.addItem(gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL))
 
-		self.labelsTree.Bind(wx.EVT_TREE_SEL_CHANGED, self.onTreeSelChanged)
-
-		bHelper = sHelper.addItem(gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL))
-
-		# Translators: Edit button
-		self.editButton = bHelper.addButton(self, label=_("&Edit"))
-		self.editButton.Bind(wx.EVT_BUTTON, self.onEdit)
-		self.editButton.Disable()
-
-		# Translators: Remove button
-		self.removeButton = bHelper.addButton(self, label=_("&Remove"))
-		self.removeButton.Bind(wx.EVT_BUTTON, self.onRemove)
-		self.removeButton.Disable()
-
-		# Translators: Remove app button
-		self.removeAppButton = bHelper.addButton(self, label=_("Remove A&pp"))
-		self.removeAppButton.Bind(wx.EVT_BUTTON, self.onRemoveApp)
-		self.removeAppButton.Disable()
-
-		# Translators: Remove all button
-		self.removeAllButton = bHelper.addButton(self, label=_("Remove &All"))
-		self.removeAllButton.Bind(wx.EVT_BUTTON, self.onRemoveAll)
-
-		self._updateButtonStates()
-
-		# Translators: Checkbox label for auto-describe feature
-		self.autoDescribeCheckbox = sHelper.addItem(
-			wx.CheckBox(self, label=_("&Speak description for unlabeled controls as labels if available"))
-		)
-		self.autoDescribeCheckbox.SetValue(config.conf["customLabels"]["autoDescribe"])
-
-	def _getExpandedApps(self):
-		"""Return the set of app names whose tree nodes are currently expanded."""
-		expanded = set()
-		root = self.labelsTree.GetRootItem()
-		if not root.IsOk():
-			return expanded
-		child, cookie = self.labelsTree.GetFirstChild(root)
-		while child.IsOk():
-			if self.labelsTree.IsExpanded(child):
-				data = self._itemData.get(child)
-				if data:
-					expanded.add(data[0])
-			child, cookie = self.labelsTree.GetNextChild(root, cookie)
-		return expanded
-
-	def _getSelectedAppName(self):
-		data = self._getSelectedData()
-		if data:
-			return data[0]
-		return None
-
-	def _populateTree(self, restoreAppName=None):
-		"""Rebuild the tree, restoring expanded state and optionally re-selecting an app node.
-
-		Args:
-			restoreAppName: if given, select this app's node after rebuilding.
-		"""
-		expandedApps = self._getExpandedApps()
-
-		self.labelsTree.DeleteAllItems()
-		self._itemData.clear()
-
-		if not _labelStore:
-			return
-
-		# Translators: Root item in the labels tree
-		root = self.labelsTree.AddRoot(_("All Labels"))
-
-		# Get labels grouped by app
-		labelsByApp = _labelStore.getAllByApp()
-
-		restoreItem = None
-		for appName in sorted(labelsByApp.keys()):
-			labels = labelsByApp[appName]
-			if not labels:
-				continue
-
-			# Translators: App node showing app name and label count
-			appText = _("{app} ({count} labels)").format(app=appName, count=len(labels))
-			appItem = self.labelsTree.AppendItem(root, appText)
-			self._itemData[appItem] = (appName, None)
-
-			for fp, label in labels.items():
-				fpDict = dict(fp)
-				idStr = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
-				labelText = _("{label} - {identifier}").format(label=label, identifier=idStr) if idStr else label
-				labelItem = self.labelsTree.AppendItem(appItem, labelText)
-				self._itemData[labelItem] = (appName, fp)
-
-			# Restore expanded state for this app node
-			if appName in expandedApps:
-				self.labelsTree.Expand(appItem)
-
-			if appName == restoreAppName:
-				restoreItem = appItem
-
-		self.labelsTree.Expand(root)
-
-		# Restore selection, or fall back to expanding the first child
-		if restoreItem and restoreItem.IsOk():
-			self.labelsTree.SelectItem(restoreItem)
-		else:
-			firstChild, cookie = self.labelsTree.GetFirstChild(root)
-			if firstChild.IsOk() and firstChild not in self._itemData:
-				pass  # root only, nothing to expand
-			elif firstChild.IsOk() and not expandedApps:
-				# First open: expand the first app node by default
-				self.labelsTree.Expand(firstChild)
-
-	def _updateButtonStates(self):
-		selection = self.labelsTree.GetSelection()
-		hasLabels = bool(self._itemData)
-
-		if not selection.IsOk() or selection == self.labelsTree.GetRootItem():
+			# Translators: Edit button
+			self.editButton = bHelper.addButton(self, label=_("&Edit"))
+			self.editButton.Bind(wx.EVT_BUTTON, self.onEdit)
 			self.editButton.Disable()
+
+			# Translators: Remove button
+			self.removeButton = bHelper.addButton(self, label=_("&Remove"))
+			self.removeButton.Bind(wx.EVT_BUTTON, self.onRemove)
 			self.removeButton.Disable()
+
+			# Translators: Remove app button
+			self.removeAppButton = bHelper.addButton(self, label=_("Remove A&pp"))
+			self.removeAppButton.Bind(wx.EVT_BUTTON, self.onRemoveApp)
 			self.removeAppButton.Disable()
-		else:
-			data = self._itemData.get(selection)
+
+			# Translators: Remove all button
+			self.removeAllButton = bHelper.addButton(self, label=_("Remove &All"))
+			self.removeAllButton.Bind(wx.EVT_BUTTON, self.onRemoveAll)
+
+			self._updateButtonStates()
+
+			# Translators: Checkbox label for auto-describe feature
+			self.autoDescribeCheckbox = sHelper.addItem(
+				wx.CheckBox(self, label=_("&Speak description for unlabeled controls as labels if available"))
+			)
+			self.autoDescribeCheckbox.SetValue(config.conf["customLabels"]["autoDescribe"])
+
+		def _getExpandedApps(self):
+			"""Return the set of app names whose tree nodes are currently expanded."""
+			expanded = set()
+			root = self.labelsTree.GetRootItem()
+			if not root.IsOk():
+				return expanded
+			child, cookie = self.labelsTree.GetFirstChild(root)
+			while child.IsOk():
+				if self.labelsTree.IsExpanded(child):
+					data = self._itemData.get(child)
+					if data:
+						expanded.add(data[0])
+				child, cookie = self.labelsTree.GetNextChild(root, cookie)
+			return expanded
+
+		def _getSelectedAppName(self):
+			data = self._getSelectedData()
 			if data:
-				appName, fp = data
-				if fp is None:
-					self.editButton.Disable()
-					self.removeButton.Disable()
-					self.removeAppButton.Enable()
-				else:
-					self.editButton.Enable()
-					self.removeButton.Enable()
-					self.removeAppButton.Enable()
+				return data[0]
+			return None
+
+		def _populateTree(self, restoreAppName=None):
+			"""Rebuild the tree, restoring expanded state and optionally re-selecting an app node.
+
+			Args:
+				restoreAppName: if given, select this app's node after rebuilding.
+			"""
+			expandedApps = self._getExpandedApps()
+
+			self.labelsTree.DeleteAllItems()
+			self._itemData.clear()
+
+			# Translators: Root item in the labels tree
+			root = self.labelsTree.AddRoot(_("All Labels"))
+
+			# Get labels grouped by app
+			labelsByApp = self._store.getAllByApp()
+
+			restoreItem = None
+			for appName in sorted(labelsByApp.keys()):
+				labels = labelsByApp[appName]
+				if not labels:
+					continue
+
+				# Translators: App node showing app name and label count
+				appText = _("{app} ({count} labels)").format(app=appName, count=len(labels))
+				appItem = self.labelsTree.AppendItem(root, appText)
+				self._itemData[appItem] = (appName, None)
+
+				for fp, label in labels.items():
+					fpDict = dict(fp)
+					idStr = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
+					labelText = _("{label} - {identifier}").format(label=label, identifier=idStr) if idStr else label
+					labelItem = self.labelsTree.AppendItem(appItem, labelText)
+					self._itemData[labelItem] = (appName, fp)
+
+				# Restore expanded state for this app node
+				if appName in expandedApps:
+					self.labelsTree.Expand(appItem)
+
+				if appName == restoreAppName:
+					restoreItem = appItem
+
+			self.labelsTree.Expand(root)
+
+			# Restore selection, or fall back to expanding the first child
+			if restoreItem and restoreItem.IsOk():
+				self.labelsTree.SelectItem(restoreItem)
 			else:
+				firstChild, cookie = self.labelsTree.GetFirstChild(root)
+				if firstChild.IsOk() and firstChild not in self._itemData:
+					pass  # root only, nothing to expand
+				elif firstChild.IsOk() and not expandedApps:
+					# First open: expand the first app node by default
+					self.labelsTree.Expand(firstChild)
+
+		def _updateButtonStates(self):
+			selection = self.labelsTree.GetSelection()
+			hasLabels = bool(self._itemData)
+
+			if not selection.IsOk() or selection == self.labelsTree.GetRootItem():
 				self.editButton.Disable()
 				self.removeButton.Disable()
 				self.removeAppButton.Disable()
+			else:
+				data = self._itemData.get(selection)
+				if data:
+					appName, fp = data
+					if fp is None:
+						self.editButton.Disable()
+						self.removeButton.Disable()
+						self.removeAppButton.Enable()
+					else:
+						self.editButton.Enable()
+						self.removeButton.Enable()
+						self.removeAppButton.Enable()
+				else:
+					self.editButton.Disable()
+					self.removeButton.Disable()
+					self.removeAppButton.Disable()
 
-		if hasLabels:
-			self.removeAllButton.Enable()
-		else:
-			self.removeAllButton.Disable()
+			if hasLabels:
+				self.removeAllButton.Enable()
+			else:
+				self.removeAllButton.Disable()
 
-	def onTreeSelChanged(self, evt):
-		self._updateButtonStates()
+		def onTreeSelChanged(self, evt):
+			self._updateButtonStates()
 
-	def _getSelectedData(self):
-		selection = self.labelsTree.GetSelection()
-		if not selection.IsOk():
-			return None
-		return self._itemData.get(selection)
+		def _getSelectedData(self):
+			selection = self.labelsTree.GetSelection()
+			if not selection.IsOk():
+				return None
+			return self._itemData.get(selection)
 
-	def onEdit(self, evt):
-		if not _labelStore:
-			return
-		data = self._getSelectedData()
-		if not data or data[1] is None:
-			return
+		def onEdit(self, evt):
+			data = self._getSelectedData()
+			if not data or data[1] is None:
+				return
 
-		appName, fp = data
-		currentLabel = _labelStore.get(fp)
-		fpDict = dict(fp)
+			appName, fp = data
+			currentLabel = self._store.get(fp)
+			fpDict = dict(fp)
 
-		identifier = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
-		roleValue = fpDict.get("role", 0)
-		roleName = getRoleDisplayString(roleValue)
+			identifier = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
+			roleValue = fpDict.get("role", 0)
+			roleName = getRoleDisplayString(roleValue)
 
-		controlInfo = {
-			'name': fpDict.get("name", _("(not available from saved data)")),
-			'role': roleName,
-			'app': fpDict.get("app", ""),
-			'identifier': identifier,
-		}
+			controlInfo = {
+				'name': fpDict.get("name", _("(not available from saved data)")),
+				'role': roleName,
+				'app': fpDict.get("app", ""),
+				'identifier': identifier,
+			}
 
-		dlg = SetLabelDialog(self, controlInfo, currentLabel)
-		try:
-			if dlg.ShowModal() == wx.ID_OK:
-				if dlg.result == "":
-					_labelStore.remove(fp)
-					log.debug(f"CustomLabels: label removed for '{appName}' via settings panel")
-				elif dlg.result:
-					_labelStore.set(fp, dlg.result)
-					log.debug(f"CustomLabels: label updated for '{appName}' via settings panel")
+			dlg = SetLabelDialog(self, controlInfo, currentLabel)
+			try:
+				if dlg.ShowModal() == wx.ID_OK:
+					if dlg.result == "":
+						self._store.remove(fp)
+						log.debug(f"CustomLabels: label removed for '{appName}' via settings panel")
+					elif dlg.result:
+						self._store.set(fp, dlg.result)
+						log.debug(f"CustomLabels: label updated for '{appName}' via settings panel")
+					self._populateTree(restoreAppName=appName)
+					self._updateButtonStates()
+			except Exception:
+				log.error("CustomLabels: unexpected error in settings panel onEdit", exc_info=True)
+			finally:
+				dlg.Destroy()
+
+		def onRemove(self, evt):
+			data = self._getSelectedData()
+			if not data or data[1] is None:
+				return
+
+			appName, fp = data
+			label = self._store.get(fp)
+
+			if gui.messageBox(
+				_("Remove label '{label}'?").format(label=label),
+				_("Confirm Removal"),
+				wx.YES_NO | wx.ICON_QUESTION
+			) == wx.YES:
+				self._store.remove(fp)
+				log.debug(f"CustomLabels: label '{label}' removed for '{appName}' via settings panel")
 				self._populateTree(restoreAppName=appName)
 				self._updateButtonStates()
-		except Exception:
-			log.error("CustomLabels: unexpected error in settings panel onEdit", exc_info=True)
-		finally:
-			dlg.Destroy()
 
-	def onRemove(self, evt):
-		if not _labelStore:
-			return
-		data = self._getSelectedData()
-		if not data or data[1] is None:
-			return
+		def onRemoveApp(self, evt):
+			appName = self._getSelectedAppName()
+			if not appName:
+				return
 
-		appName, fp = data
-		label = _labelStore.get(fp)
+			labels = self._store.getLabelsForApp(appName)
+			count = len(labels)
 
-		if gui.messageBox(
-			_("Remove label '{label}'?").format(label=label),
-			_("Confirm Removal"),
-			wx.YES_NO | wx.ICON_QUESTION
-		) == wx.YES:
-			_labelStore.remove(fp)
-			log.debug(f"CustomLabels: label '{label}' removed for '{appName}' via settings panel")
-			self._populateTree(restoreAppName=appName)
-			self._updateButtonStates()
+			if gui.messageBox(
+				_("Remove all {count} labels for '{app}'?").format(count=count, app=appName),
+				_("Confirm Removal"),
+				wx.YES_NO | wx.ICON_WARNING
+			) == wx.YES:
+				self._store.removeApp(appName)
+				log.debug(f"CustomLabels: all {count} labels removed for '{appName}' via settings panel")
+				self._populateTree()
+				self._updateButtonStates()
 
-	def onRemoveApp(self, evt):
-		if not _labelStore:
-			return
-		appName = self._getSelectedAppName()
-		if not appName:
-			return
+		def onRemoveAll(self, evt):
+			allLabels = self._store.getAll()
+			if not allLabels:
+				return
 
-		labels = _labelStore.getLabelsForApp(appName)
-		count = len(labels)
+			if gui.messageBox(
+				_("Remove all {count} custom labels?").format(count=len(allLabels)),
+				_("Confirm Removal"),
+				wx.YES_NO | wx.ICON_WARNING
+			) == wx.YES:
+				self._store.clear()
+				log.debug(f"CustomLabels: all {len(allLabels)} labels cleared via settings panel")
+				self._populateTree()
+				self._updateButtonStates()
 
-		if gui.messageBox(
-			_("Remove all {count} labels for '{app}'?").format(count=count, app=appName),
-			_("Confirm Removal"),
-			wx.YES_NO | wx.ICON_WARNING
-		) == wx.YES:
-			_labelStore.removeApp(appName)
-			log.debug(f"CustomLabels: all {count} labels removed for '{appName}' via settings panel")
-			self._populateTree()
-			self._updateButtonStates()
+		def onSave(self):
+			config.conf["customLabels"]["autoDescribe"] = self.autoDescribeCheckbox.GetValue()
 
-	def onRemoveAll(self, evt):
-		if not _labelStore:
-			return
-		allLabels = _labelStore.getAll()
-		if not allLabels:
-			return
-
-		if gui.messageBox(
-			_("Remove all {count} custom labels?").format(count=len(allLabels)),
-			_("Confirm Removal"),
-			wx.YES_NO | wx.ICON_WARNING
-		) == wx.YES:
-			_labelStore.clear()
-			log.debug(f"CustomLabels: all {len(allLabels)} labels cleared via settings panel")
-			self._populateTree()
-			self._updateButtonStates()
-
-	def onSave(self):
-		config.conf["customLabels"]["autoDescribe"] = self.autoDescribeCheckbox.GetValue()
+	return CustomLabelsSettingsPanel

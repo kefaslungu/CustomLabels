@@ -21,7 +21,7 @@ from .labeler import (
 	setLabel,
 	removeLabel,
 )
-from .dialogs import SetLabelDialog, CustomLabelsSettingsPanel, setLabelStore
+from .dialogs import SetLabelDialog, makeSettingsPanel
 from .fingerPrintReader import getObjectFingerprint, fingerprintToDict
 
 import addonHandler
@@ -66,17 +66,17 @@ def isLabelable(obj):
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	# Translators: The gestures category for this add-on in input gestures dialog.
 	scriptCategory = _("Custom Labels")
+
 	def __init__(self):
 		super().__init__()
-		# Set the label store for the settings panel
-		setLabelStore(labelStore)
-		# Register the settings panel
-		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(CustomLabelsSettingsPanel)
+		# Create the settings panel class with the label store bound
+		self._settingsPanel = makeSettingsPanel(labelStore)
+		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(self._settingsPanel)
 
 	def terminate(self):
 		# Unregister the settings panel
 		try:
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(CustomLabelsSettingsPanel)
+			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(self._settingsPanel)
 		except ValueError:
 			pass
 		super().terminate()
@@ -238,5 +238,5 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""Open NVDA settings to the Custom Labels panel."""
 		gui.mainFrame.popupSettingsDialog(
 			gui.settingsDialogs.NVDASettingsDialog,
-			CustomLabelsSettingsPanel
+			self._settingsPanel
 		)
