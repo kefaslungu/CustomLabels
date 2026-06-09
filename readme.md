@@ -99,6 +99,7 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 * [Kostenkov-2021 (@Kostenkov-2021)](https://github.com/Kostenkov-2021): Added Russian README and localisation. ([#3](https://github.com/kefaslungu/CustomLabels/pull/3))
 * Umut KORKMAZ (umutkork@gmail.com): Added Turkish translation.
 * [George-br (@George-br)](https://github.com/George-br): Added Ukrainian translation. ([#6](https://github.com/kefaslungu/CustomLabels/pull/6))
+* Brell Rainer (Rainer.Brell@bfw-wuerzburg.de): Added German translations.
 
 ## Changelog
 
@@ -107,7 +108,7 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 ### Version 2026.02
 
 * Added support for NVDA 2026.1
-* Added Ukrainian, Russian and Turkish translations.
+* Added Ukrainian, Russian, german and Turkish translations.
 * Improved control identification using original control name.
 * Fixed labels not working in web-based applications (Electron, WebView2).
 * Fixed all buttons getting the same label in some applications.
