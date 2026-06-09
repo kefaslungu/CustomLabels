@@ -12,6 +12,7 @@ import gui.guiHelper
 import gui.settingsDialogs
 import controlTypes
 import addonHandler
+from logHandler import log
 
 # Initialize translations
 addonHandler.initTranslation()
@@ -23,6 +24,7 @@ def getRoleDisplayString(roleValue):
 		role = controlTypes.Role(roleValue)
 		return role.displayString
 	except (ValueError, AttributeError):
+		log.debugWarning(f"CustomLabels: unknown role value {roleValue!r}")
 		return str(roleValue)
 
 
@@ -292,10 +294,14 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			if dlg.ShowModal() == wx.ID_OK:
 				if dlg.result == "":
 					_labelStore.remove(fp)
+					log.debug(f"CustomLabels: label removed for '{appName}' via settings panel")
 				elif dlg.result:
 					_labelStore.set(fp, dlg.result)
+					log.debug(f"CustomLabels: label updated for '{appName}' via settings panel")
 				self._populateTree()
 				self._updateButtonStates()
+		except Exception:
+			log.error("CustomLabels: unexpected error in settings panel onEdit", exc_info=True)
 		finally:
 			dlg.Destroy()
 
@@ -315,6 +321,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.YES_NO | wx.ICON_QUESTION
 		) == wx.YES:
 			_labelStore.remove(fp)
+			log.debug(f"CustomLabels: label '{label}' removed for '{appName}' via settings panel")
 			self._populateTree()
 			self._updateButtonStates()
 
@@ -334,6 +341,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.YES_NO | wx.ICON_WARNING
 		) == wx.YES:
 			_labelStore.removeApp(appName)
+			log.debug(f"CustomLabels: all {count} labels removed for '{appName}' via settings panel")
 			self._populateTree()
 			self._updateButtonStates()
 
@@ -350,6 +358,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			wx.YES_NO | wx.ICON_WARNING
 		) == wx.YES:
 			_labelStore.clear()
+			log.debug(f"CustomLabels: all {len(allLabels)} labels cleared via settings panel")
 			self._populateTree()
 			self._updateButtonStates()
 

@@ -11,15 +11,19 @@ import os
 import re
 import json
 import globalVars
+from logHandler import log
 from NVDAObjects import NVDAObject
 
 
 # Storage location
 def getLabelsFolder():
-	"""Returns the path to the labels folder."""
+	"""Returns the path to the labels folder, creating it if necessary."""
 	folder = os.path.join(globalVars.appArgs.configPath, "customLabels")
 	if not os.path.exists(folder):
-		os.makedirs(folder)
+		try:
+			os.makedirs(folder)
+		except Exception:
+			log.error("CustomLabels: failed to create labels folder", exc_info=True)
 	return folder
 
 
@@ -80,7 +84,9 @@ class LabelStore:
 				self._keyFromString(k): v
 				for k, v in data.get("labels", {}).items()
 			}
+			log.debug(f"CustomLabels: loaded {len(self._cache[appName])} labels for '{appName}'")
 		except Exception:
+			log.error(f"CustomLabels: failed to load labels for '{appName}'", exc_info=True)
 			self._cache[appName] = {}
 
 	def _saveApp(self, appName):
@@ -89,12 +95,13 @@ class LabelStore:
 		labels = self._cache.get(appName, {})
 
 		if not labels:
-			# Delete file if no labels
+			# Delete file if no labels remain
 			if os.path.exists(filePath):
 				try:
 					os.remove(filePath)
+					log.debug(f"CustomLabels: removed empty labels file for '{appName}'")
 				except Exception:
-					pass
+					log.error(f"CustomLabels: failed to remove labels file for '{appName}'", exc_info=True)
 			return
 
 		try:
@@ -107,8 +114,9 @@ class LabelStore:
 			}
 			with open(filePath, "w", encoding="utf-8") as f:
 				json.dump(data, f, indent=2, ensure_ascii=False)
+			log.debug(f"CustomLabels: saved {len(labels)} labels for '{appName}'")
 		except Exception:
-			pass
+			log.error(f"CustomLabels: failed to save labels for '{appName}'", exc_info=True)
 
 	def _keyToString(self, key):
 		"""Convert fingerprint tuple to JSON string."""
@@ -215,23 +223,24 @@ class LabelStore:
 		folder = getLabelsFolder()
 		try:
 			for filename in os.listdir(folder):
-				if filename.endswith(".json"):
-					# Read the file to get actual app name
-					filePath = os.path.join(folder, filename)
-					try:
-						with open(filePath, "r", encoding="utf-8") as f:
-							data = json.load(f)
-						appName = data.get("appName", filename[:-5])
-						if appName not in self._loadedApps:
-							self._loadedApps.add(appName)
-							self._cache[appName] = {
-								self._keyFromString(k): v
-								for k, v in data.get("labels", {}).items()
-							}
-					except Exception:
-						pass
+				if not filename.endswith(".json"):
+					continue
+				filePath = os.path.join(folder, filename)
+				try:
+					with open(filePath, "r", encoding="utf-8") as f:
+						data = json.load(f)
+					appName = data.get("appName", filename[:-5])
+					if appName not in self._loadedApps:
+						self._loadedApps.add(appName)
+						self._cache[appName] = {
+							self._keyFromString(k): v
+							for k, v in data.get("labels", {}).items()
+						}
+						log.debug(f"CustomLabels: loaded {len(self._cache[appName])} labels for '{appName}' (bulk load)")
+				except Exception:
+					log.error(f"CustomLabels: failed to load labels file '{filename}'", exc_info=True)
 		except Exception:
-			pass
+			log.error("CustomLabels: failed to list labels folder", exc_info=True)
 
 
 # Global label store instance

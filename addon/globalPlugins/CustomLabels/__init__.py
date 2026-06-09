@@ -94,17 +94,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				try:
 					name = obj._get_name() if hasattr(obj, '_get_name') else obj.name
 				except Exception:
+					log.debugWarning("CustomLabels: failed to get name for auto-describe check", exc_info=True)
 					name = obj.name
 				if not name:
 					try:
 						desc = obj.description
 					except Exception:
+						log.debugWarning("CustomLabels: failed to get description for auto-describe", exc_info=True)
 						desc = None
 					if desc:
 						clsList.insert(0, makeLabelOverlay(desc))
 
-		except Exception as e:
-			log.error(f"customlabels error: {e}")
+		except Exception:
+			log.error("CustomLabels: unexpected error in chooseNVDAObjectOverlayClasses", exc_info=True)
 
 	@script(
 		# Translators: Description for the set custom label script
@@ -126,9 +128,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				# Translators: Error message when control cannot be identified
 				ui.message(_("Cannot identify this control"))
 				return
-		except Exception as e:
-			# Translators: Error message with details. {error} is the error message.
-			ui.message(_("Error: {error}").format(error=e))
+		except Exception:
+			log.error("CustomLabels: unexpected error getting fingerprint in script_setCustomLabel", exc_info=True)
+			# Translators: Error message when label cannot be set due to an unexpected error
+			ui.message(_("An unexpected error occurred"))
 			return
 
 		currentLabel = getLabel(fp)
@@ -139,6 +142,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		try:
 			originalName = obj._get_name() if hasattr(obj, '_get_name') else obj.name
 		except Exception:
+			log.debugWarning("CustomLabels: failed to get original name for dialog", exc_info=True)
 			originalName = obj.name
 
 		controlInfo = {
@@ -187,9 +191,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			else:
 				# Translators: Message when there's no label to remove
 				ui.message(_("No label to remove"))
-		except Exception as e:
-			# Translators: Error message with details. {error} is the error message.
-			ui.message(_("Error: {error}").format(error=e))
+		except Exception:
+			log.error("CustomLabels: unexpected error in script_removeCustomLabel", exc_info=True)
+			# Translators: Error message when label cannot be removed due to an unexpected error
+			ui.message(_("An unexpected error occurred"))
 
 	@script(
 		# Translators: Description for the check label script
@@ -210,9 +215,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			else:
 				# Translators: Message when no custom label exists. {name} is the original name.
 				ui.message(_("No custom label. Original: {name}").format(name=obj.name or _("unlabeled")))
-		except Exception as e:
-			# Translators: Error message with details. {error} is the error message.
-			ui.message(_("Error: {error}").format(error=e))
+		except Exception:
+			log.error("CustomLabels: unexpected error in script_checkLabel", exc_info=True)
+			# Translators: Error message when label cannot be checked due to an unexpected error
+			ui.message(_("An unexpected error occurred"))
 
 	@script(
 		# Translators: Description for the manage labels script
