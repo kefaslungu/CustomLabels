@@ -258,7 +258,14 @@ def makeLabelOverlay(labelText):
 		return _overlayCache[labelText]
 
 	class LabelOverlay(NVDAObject):
-		name = labelText
+		# Use a property so instance-level assignment cannot shadow the label.
+		@property
+		def name(self):
+			return labelText
+
+		@name.setter
+		def name(self, value):
+			pass
 
 	_overlayCache[labelText] = LabelOverlay
 	return LabelOverlay

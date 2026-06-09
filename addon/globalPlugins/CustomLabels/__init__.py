@@ -54,8 +54,13 @@ def getRoleName(role):
 	"""Get a human-readable role name."""
 	try:
 		return role.displayString
-	except Exception:
+	except AttributeError:
 		return str(role)
+
+
+def isLabelable(obj):
+	"""Return True if the object's role supports custom labeling."""
+	return obj.role in LABELABLE_ROLES
 
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -79,7 +84,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
 		"""Inject overlay if custom label exists, or auto-describe if enabled."""
 		try:
-			if obj.role not in LABELABLE_ROLES:
+			if not isLabelable(obj):
 				return
 
 			fp = getObjectFingerprint(obj)
@@ -117,7 +122,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"""Set or edit a custom label for the focused control."""
 		obj = api.getFocusObject()
 
-		if obj.role not in LABELABLE_ROLES:
+		if not isLabelable(obj):
 			# Translators: Error message when control cannot be labeled
 			ui.message(_("Cannot label this type of control"))
 			return
