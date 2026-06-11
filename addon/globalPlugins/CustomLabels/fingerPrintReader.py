@@ -28,6 +28,11 @@ class FingerprintHandler:
 		raise NotImplementedError
 
 	@classmethod
+	def needs_disambiguation(cls, fields: dict) -> bool:
+		"""Return True if the primary fields are too weak to uniquely identify the control."""
+		return False
+
+	@classmethod
 	def _safeGet(cls, obj, attr, default, label):
 		"""Safely get an attribute, logging on failure."""
 		try:
@@ -53,8 +58,54 @@ def _getHandler(obj):
 	return None
 
 
+def _addDisambiguation(obj, fp):
+	"""Add positional disambiguation fields when primary identifiers are weak.
+
+	Uses parent automationId/class and sibling index. These are positional so
+	they can shift if the app dynamically adds/removes controls, but they are
+	the best available option when no stable ID exists.
+
+	NOTE: Do NOT call obj.parent.children (sibling iteration) here —
+	it freezes NVDA. Use indexInParent instead.
+	"""
+	try:
+		parent = obj.parent
+		if parent is None:
+			fp["parentAutoId"] = ""
+			fp["parentClass"] = ""
+			fp["siblingIndex"] = -1
+			return
+
+		# Parent automationId (UIA only, safe to try on any object)
+		try:
+			fp["parentAutoId"] = parent.UIAElement.currentAutomationId or ""
+		except Exception:
+			fp["parentAutoId"] = ""
+
+		fp["parentClass"] = ""
+		try:
+			fp["parentClass"] = parent.windowClassName or ""
+		except Exception:
+			pass
+
+		# Sibling index — use indexInParent, never iterate children
+		try:
+			fp["siblingIndex"] = obj.indexInParent if obj.indexInParent is not None else -1
+		except Exception:
+			fp["siblingIndex"] = -1
+
+	except Exception:
+		log.debugWarning("CustomLabels: failed to add disambiguation fields", exc_info=True)
+		fp["parentAutoId"] = ""
+		fp["parentClass"] = ""
+		fp["siblingIndex"] = -1
+
+
 class UIAHandler(FingerprintHandler):
 	backend_name = "UIA"
+
+	# FrameworkId values that indicate web/Chromium content
+	_WEB_FRAMEWORKS = {"Chrome"}
 
 	@classmethod
 	def can_handle(cls, obj):
@@ -69,7 +120,52 @@ class UIAHandler(FingerprintHandler):
 			log.debugWarning("CustomLabels [UIA]: failed to get automationId", exc_info=True)
 			fields["automationId"] = ""
 		fields["className"] = cls._safeGet(obj, "windowClassName", "", "windowClassName")
+
+		# Detect the underlying UI framework — kept internal, not stored in the
+		# fingerprint, to avoid breaking existing saved labels.
+		frameworkId = ""
+		try:
+			frameworkId = obj.UIAElement.currentFrameworkId or ""
+		except Exception:
+			log.debugWarning("CustomLabels [UIA]: failed to get frameworkId", exc_info=True)
+
+		# For web/Chromium content only, include ARIA fields as a stable
+		# middle tier — they map from HTML attributes (aria-label, aria-describedby,
+		# etc.) and survive app restarts unlike positional fields.
+		# Only add them when non-empty so existing labels without these fields
+		# continue to match (backward compatible).
+		if frameworkId in cls._WEB_FRAMEWORKS:
+			try:
+				ariaProps = obj.UIAElement.currentAriaProperties or ""
+			except Exception:
+				log.debugWarning("CustomLabels [UIA]: failed to get ariaProperties", exc_info=True)
+				ariaProps = ""
+			try:
+				ariaRole = obj.UIAElement.currentAriaRole or ""
+			except Exception:
+				log.debugWarning("CustomLabels [UIA]: failed to get ariaRole", exc_info=True)
+				ariaRole = ""
+			if ariaProps:
+				fields["ariaProperties"] = ariaProps
+			if ariaRole:
+				fields["ariaRole"] = ariaRole
+
+		# Store frameworkId on the fields dict under a private key so
+		# needs_disambiguation can read it without it entering the fingerprint.
+		fields["_frameworkId"] = frameworkId
 		return fields
+
+	@classmethod
+	def needs_disambiguation(cls, fields: dict) -> bool:
+		# automationId empty means we have no stable unique ID.
+		# For web frameworks, ARIA fields may serve as a stable middle tier,
+		# so only fall back to positional disambiguation if those are also empty.
+		if fields.get("automationId"):
+			return False
+		if fields.get("_frameworkId") in cls._WEB_FRAMEWORKS:
+			if fields.get("ariaProperties") or fields.get("ariaRole"):
+				return False
+		return True
 
 
 class JABHandler(FingerprintHandler):
@@ -97,10 +193,32 @@ class IA2Handler(FingerprintHandler):
 
 	@classmethod
 	def get_fields(cls, obj):
-		return {
+		fields = {
 			"windowClassName": cls._safeGet(obj, "windowClassName", "", "windowClassName"),
-			"windowControlID": cls._safeGet(obj, "windowControlID", 0, "windowControlID"),
 		}
+
+		# For Ia2Web objects (Chromium/WebView2/Electron), windowControlID is a
+		# renderer-window handle that changes every restart and is shared across
+		# all elements — it provides no identification value and must be excluded.
+		# For all other IA2 objects, include it as it is a stable control identifier.
+		if not _isIa2Web(obj):
+			fields["windowControlID"] = cls._safeGet(obj, "windowControlID", 0, "windowControlID")
+
+		return fields
+
+	@classmethod
+	def needs_disambiguation(cls, fields: dict) -> bool:
+		# windowControlID of 0 means no useful ID for non-web IA2 objects.
+		if fields.get("windowControlID") == 0:
+			return True
+		# Ia2Web objects never have windowControlID in their fields (excluded above).
+		# For them, windowClassName + role + name + description + parentName
+		# (added by getObjectFingerprint) are the only safe stable fields.
+		# Positional disambiguation is unsafe here (IA2Attributes unavailable during
+		# chooseNVDAObjectOverlayClasses, and windowControlID changes every restart).
+		if fields.get("windowClassName") == "Chrome_RenderWidgetHostHWND":
+			return False
+		return False
 
 
 registerHandler(UIAHandler, priority=10)
@@ -108,10 +226,28 @@ registerHandler(JABHandler, priority=20)
 registerHandler(IA2Handler, priority=100)  # fallback, always last
 
 
+_IA2WEB_WINDOW_CLASSES = {"Chrome_RenderWidgetHostHWND"}
+
+
+def _isIa2Web(obj):
+	"""Return True if obj is a Chromium/WebView2 web content object.
+
+	Detects by windowClassName rather than isinstance() — the class name is
+	stable and available at all object construction stages, including during
+	chooseNVDAObjectOverlayClasses before overlay classes are applied.
+	"""
+	try:
+		return obj.windowClassName in _IA2WEB_WINDOW_CLASSES
+	except Exception:
+		return False
+
+
 def getObjectFingerprint(obj):
 	"""
 	Return a stable fingerprint for an NVDAObject.
 	Uses backend-specific properties plus the original name for differentiation.
+	When primary identifiers are weak (e.g. empty automationId, or web content
+	where controlID is shared), positional disambiguation fields are added.
 	"""
 	try:
 		fp = {}
@@ -130,14 +266,21 @@ def getObjectFingerprint(obj):
 			log.debugWarning("CustomLabels: failed to get role", exc_info=True)
 			fp["role"] = 0
 
-		# Original name - helps differentiate controls with different names
-		# (e.g., labeled buttons vs unlabeled ones in the same app)
-		# Use _get_name() to bypass any custom label overlay and get the real name
+		# Original name - helps differentiate controls with different names.
+		# Prefer _get_name() to bypass any custom label overlay, but fall back to
+		# obj.name if _get_name() returns empty — during chooseNVDAObjectOverlayClasses
+		# the IAccessible COM call may not be ready yet for partially constructed objects,
+		# while NVDA's cached obj.name (populated from the focus event) is reliable.
 		try:
+			name = ""
 			if hasattr(obj, '_get_name'):
-				fp["name"] = obj._get_name() or ""
-			else:
-				fp["name"] = obj.name or ""
+				try:
+					name = obj._get_name() or ""
+				except Exception:
+					pass
+			if not name:
+				name = obj.name or ""
+			fp["name"] = name
 		except Exception:
 			log.debugWarning("CustomLabels: failed to get name", exc_info=True)
 			fp["name"] = ""
@@ -166,7 +309,16 @@ def getObjectFingerprint(obj):
 			return None
 
 		fp["backend"] = handler.backend_name
-		fp.update(handler.get_fields(obj))
+		backendFields = handler.get_fields(obj)
+		# Strip private keys (prefixed with _) before updating fp —
+		# they are for internal handler logic only and must not enter the fingerprint.
+		fp.update({k: v for k, v in backendFields.items() if not k.startswith("_")})
+
+		# Add positional disambiguation when primary IDs are too weak.
+		# Each handler's needs_disambiguation() decides based on what fields it collected.
+		if handler.needs_disambiguation(backendFields):
+			log.debug(f"CustomLabels: weak fingerprint for '{fp.get('app')}', adding disambiguation")
+			_addDisambiguation(obj, fp)
 
 		# Convert to hashable tuple
 		return tuple(sorted(fp.items()))

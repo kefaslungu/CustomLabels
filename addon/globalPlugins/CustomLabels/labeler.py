@@ -17,8 +17,13 @@ from NVDAObjects import NVDAObject
 
 # Storage location
 def getLabelsFolder():
-	"""Returns the path to the labels folder, creating it if necessary."""
-	folder = os.path.join(globalVars.appArgs.configPath, "customLabels")
+	"""Returns the path to the labels folder."""
+	return os.path.join(globalVars.appArgs.configPath, "customLabels")
+
+
+def _ensureLabelsFolder():
+	"""Create the labels folder if it does not exist. Returns the folder path."""
+	folder = getLabelsFolder()
 	if not os.path.exists(folder):
 		try:
 			os.makedirs(folder)
@@ -48,9 +53,9 @@ def sanitizeAppName(appName):
 
 
 def getAppFilePath(appName):
-	"""Get the JSON file path for an app."""
+	"""Get the JSON file path for an app, ensuring the labels folder exists."""
 	safeName = sanitizeAppName(appName)
-	return os.path.join(getLabelsFolder(), f"{safeName}.json")
+	return os.path.join(_ensureLabelsFolder(), f"{safeName}.json")
 
 
 # Per-app label storage
@@ -133,8 +138,15 @@ class LabelStore:
 			items.append(("description", ""))
 		if "parentName" not in keys:
 			items.append(("parentName", ""))
-		# Remove old parentDesc field if present
-		items = [item for item in items if item[0] != "parentDesc"]
+		# Remove obsolete fields from older fingerprint versions
+		_OBSOLETE_FIELDS = {"parentDesc", "ia2Class", "ia2Tag"}
+		items = [item for item in items if item[0] not in _OBSOLETE_FIELDS]
+		# Remove windowControlID for Ia2Web fingerprints (Chrome_RenderWidgetHostHWND):
+		# this value is a renderer-window handle that changes every app restart, so
+		# saved labels with it would never match the live fingerprint after a restart.
+		fpDict = dict(items)
+		if fpDict.get("windowClassName") == "Chrome_RenderWidgetHostHWND" and "windowControlID" in fpDict:
+			items = [item for item in items if item[0] != "windowControlID"]
 		return tuple(sorted(items))
 
 	def _getAppFromFingerprint(self, fingerprint):
@@ -225,11 +237,17 @@ class LabelStore:
 			for filename in os.listdir(folder):
 				if not filename.endswith(".json"):
 					continue
+				# Use the filename stem as a cheap pre-check before opening the file.
+				# The real appName inside the JSON may differ, but this avoids I/O for
+				# apps whose sanitized name is already loaded.
+				stemName = filename[:-5]
+				if stemName in self._loadedApps:
+					continue
 				filePath = os.path.join(folder, filename)
 				try:
 					with open(filePath, "r", encoding="utf-8") as f:
 						data = json.load(f)
-					appName = data.get("appName", filename[:-5])
+					appName = data.get("appName", stemName)
 					if appName not in self._loadedApps:
 						self._loadedApps.add(appName)
 						self._cache[appName] = {
