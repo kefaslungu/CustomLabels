@@ -170,6 +170,7 @@ class LabelStore:
 		self._cache[appName][fingerprint] = label
 		self._saveApp(appName)
 		_overlayCache.clear()
+		_invalidateBrowseModeCache()
 
 	def remove(self, fingerprint):
 		"""Remove a label for a fingerprint."""
@@ -180,6 +181,7 @@ class LabelStore:
 			del self._cache[appName][fingerprint]
 			self._saveApp(appName)
 			_overlayCache.clear()
+			_invalidateBrowseModeCache()
 			return True
 		return False
 
@@ -287,6 +289,18 @@ def makeLabelOverlay(labelText):
 
 	_overlayCache[labelText] = LabelOverlay
 	return LabelOverlay
+
+
+def _invalidateBrowseModeCache():
+	"""Notify virtualBufferSupport to clear its label caches.
+
+	Imported lazily to avoid a circular import (virtualBufferSupport imports labeler).
+	"""
+	try:
+		from . import virtualBufferSupport
+		virtualBufferSupport.invalidateCacheForLabel(None)
+	except Exception:
+		pass
 
 
 # Convenience functions

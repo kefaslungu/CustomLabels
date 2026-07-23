@@ -23,6 +23,7 @@ from .labeler import (
 )
 from .dialogs import SetLabelDialog, makeSettingsPanel
 from .fingerPrintReader import getObjectFingerprint, fingerprintToDict
+from . import virtualBufferSupport
 
 import addonHandler
 
@@ -72,8 +73,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		# Create the settings panel class with the label store bound
 		self._settingsPanel = makeSettingsPanel(labelStore)
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(self._settingsPanel)
+		virtualBufferSupport.initialize()
 
 	def terminate(self):
+		virtualBufferSupport.terminate()
 		# Unregister the settings panel
 		try:
 			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(self._settingsPanel)
@@ -233,6 +236,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_manageLabels(self, gesture):
 		"""Open the Custom Labels settings panel."""
 		wx.CallAfter(self._openSettingsPanel)
+
+	def event_gainFocus(self, obj, nextHandler):
+		"""Ensure the browse mode patch is applied whenever a virtual buffer gains focus."""
+		ti = getattr(obj, "treeInterceptor", None)
+		if ti is not None:
+			virtualBufferSupport.ensurePatched(ti)
+		nextHandler()
 
 	def _openSettingsPanel(self):
 		"""Open NVDA settings to the Custom Labels panel."""

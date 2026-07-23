@@ -103,6 +103,12 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 
 ## Changelog
 
+### Version 2026.2
+
+* Fixed a bug where a custom label could be silently overwritten by NVDA's internal name assignment.
+* The settings panel tree now preserves expanded and selected state after editing or removing a label.
+* Fixed labelling individual controls in apps where multiple controls share identical properties (e.g. TeamViewer, Electron, WebView2-based apps). Labelling one button no longer labels all buttons of the same type.
+
 ### Version 2026.1
 * A release compartable with NVDA 2026.1.
 ### Version 2026.02
@@ -113,7 +119,7 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 * Fixed labels not working in web-based applications (Electron, WebView2).
 * Fixed all buttons getting the same label in some applications.
 * Added support for labelling editable text.
-* Added option to speak description for unlabelled controls, greatly improving accessibility in Java-based applications (Settings > Custom Labels).
+* Added option to speak description for unlabeled controls, greatly improving accessibility in Java-based applications (Settings > Custom Labels).
 * Added known limitations documentation.
 
 ### Version 2026.0
