@@ -23,7 +23,7 @@ from .labeler import (
 )
 from .dialogs import SetLabelDialog, makeSettingsPanel
 from .fingerPrintReader import getObjectFingerprint, fingerprintToDict
-from . import virtualBufferSupport
+from . import vbuf
 
 import addonHandler
 
@@ -73,10 +73,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		# Create the settings panel class with the label store bound
 		self._settingsPanel = makeSettingsPanel(labelStore)
 		gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(self._settingsPanel)
-		virtualBufferSupport.initialize()
+		vbuf.initialize()
 
 	def terminate(self):
-		virtualBufferSupport.terminate()
+		vbuf.terminate()
 		# Unregister the settings panel
 		try:
 			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(self._settingsPanel)
@@ -238,10 +238,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		wx.CallAfter(self._openSettingsPanel)
 
 	def event_gainFocus(self, obj, nextHandler):
-		"""Ensure the browse mode patch is applied whenever a virtual buffer gains focus."""
+		"""Ensure the browse mode patch is applied whenever a virtual buffer gains focus.
+
+		The cache for the focused object is pre-populated here, before
+		``nextHandler()`` triggers speech. This ensures that any subsequent call to
+		``_lookupLabel`` from within ``speakTextInfo`` / ``_patchedGetFieldsInRange``
+		is a pure dictionary lookup with no COM object construction on the hot path.
+		"""
 		ti = getattr(obj, "treeInterceptor", None)
 		if ti is not None:
-			virtualBufferSupport.ensurePatched(ti)
+			vbuf.ensurePatched(ti)
+			vbuf.preCacheForObject(ti, obj)
 		nextHandler()
 
 	def _openSettingsPanel(self):

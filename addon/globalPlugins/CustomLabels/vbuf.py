@@ -1,4 +1,4 @@
-# virtualBufferSupport
+# vbuf
 # A part of Custom Labels addon for NVDA
 # Injects custom labels into virtual buffer (browse mode) content.
 # copyright: 2026 Kefas Lungu
@@ -47,29 +47,51 @@ _activeInterceptors: dict = {}
 
 
 def _lookupLabel(treeInterceptor, tiId, docHandle, ID):
-	"""Look up the custom label for a buffer node, using the per-interceptor cache.
+	"""Look up the custom label for a buffer node using the per-interceptor cache.
 
-	Returns the label string if one exists, or None.
-	Populates the cache on first access for each (docHandle, ID) pair.
+	Pure dictionary lookup — no COM calls, no object construction.
+	The cache is pre-populated by :meth:`preCacheForObject` when an object gains
+	focus, keeping this function safe to call from the speech path.
+
+	:param treeInterceptor: The active TreeInterceptor.
+	:param tiId: ``id(treeInterceptor)``, used as the cache key.
+	:param docHandle: The virtual buffer document handle.
+	:param ID: The virtual buffer node identifier.
+	:return: The label string if one is cached, otherwise ``None``.
 	"""
+	try:
+		cache = _interceptorCaches.get(tiId)
+		if cache is None:
+			return None
+		return cache.get((docHandle, ID))
+	except Exception:
+		return None
+
+
+def preCacheForObject(treeInterceptor, obj) -> None:
+	"""Populate the browse mode label cache for an already-constructed NVDAObject.
+
+	Called with an object that is already fully constructed (e.g. from
+	``event_gainFocus``) so that no new COM object construction is needed.
+	Uses :meth:`treeInterceptor.getIdentifierFromNVDAObject` to obtain the
+	``(docHandle, ID)`` key without triggering any additional COM calls.
+
+	:param treeInterceptor: The active TreeInterceptor that owns ``obj``.
+	:param obj: The NVDAObject to fingerprint and cache a label for.
+	"""
+	tiId = id(treeInterceptor)
 	cache = _interceptorCaches.get(tiId)
 	if cache is None:
-		return None
+		return
+
+	try:
+		docHandle, ID = treeInterceptor.getIdentifierFromNVDAObject(obj)
+	except Exception:
+		return
 
 	cacheKey = (docHandle, ID)
 	if cacheKey in cache:
-		return cache[cacheKey]
-
-	# Cache miss — reconstruct NVDAObject and fingerprint it
-	try:
-		obj = treeInterceptor.getNVDAObjectFromIdentifier(docHandle, ID)
-	except Exception:
-		cache[cacheKey] = None
-		return None
-
-	if obj is None:
-		cache[cacheKey] = None
-		return None
+		return  # Already resolved — don't re-fingerprint
 
 	try:
 		fp = getObjectFingerprint(obj)
@@ -80,8 +102,7 @@ def _lookupLabel(treeInterceptor, tiId, docHandle, ID):
 
 	cache[cacheKey] = label
 	if label:
-		log.debug(f"CustomLabels [browse]: cached label '{label}' for node ({docHandle}, {ID})")
-	return label
+		log.debug(f"CustomLabels [browse]: pre-cached label '{label}' for node ({docHandle}, {ID})")
 
 
 def _makeGetFieldsInRange(originalMethod, treeInterceptor):
@@ -247,7 +268,7 @@ def _onBrowseModeStateChange(browseMode: bool):
 def initialize():
 	"""Register for browse mode state changes."""
 	treeInterceptorHandler.post_browseModeStateChange.register(_onBrowseModeStateChange)
-	log.debug("CustomLabels: virtualBufferSupport initialized")
+	log.debug("CustomLabels: vbuf initialized")
 
 
 def terminate():
@@ -258,7 +279,7 @@ def terminate():
 	_patches.clear()
 	_interceptorCaches.clear()
 	_activeInterceptors.clear()
-	log.debug("CustomLabels: virtualBufferSupport terminated")
+	log.debug("CustomLabels: vbuf terminated")
 
 
 def ensurePatched(treeInterceptor):

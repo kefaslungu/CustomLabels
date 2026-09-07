@@ -21,19 +21,18 @@ addon_info = AddonInfo(
 	addon_summary=_("Custom Labels"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
-	addon_description=_("""An addon that allows you to add custom labels for unlabeled controls and edit existing ones. Please note: only native applications are supported at this time."""),
+	addon_description=_("""An addon that allows you to add custom labels for unlabeled controls and edit existing ones."""),
 	# version
-	addon_version="2026.1",
+	addon_version="2026.2",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_("""
-		* Added support for NVDA 2026.1
-		* Added Ukrainian, Russian, german and Turkish translations.
-		* Improved control identification using original control name.
-		* Fixed labels not working in some web-based applications (Electron, WebView2).
-		* Fixed all buttons getting the same label in some applications.
-		* Added support for labelling editable text.
-		* Added an option to speak description as labels for unlabelled controls, greatly improving accessibility in applications (Settings > Custom Labels)."""),
+		* Fixed a bug where a custom label could be silently overwritten by NVDA's internal name assignment.
+		* The settings panel tree now preserves expanded and selected state after editing or removing a label.
+		* Fixed labelling individual controls in apps where multiple controls share identical properties. Labelling one button no longer labels all buttons of the same type.
+		* Added browse mode (virtual buffer) support for Electron and WebView2-based applications: custom labels are now applied when reading content with arrow keys or quick navigation, not only in focus mode. Regular browsers are not yet supported.
+		* Fixed labels failing to match after an application restart in Electron and WebView2-based apps. The volatile renderer-window identifier is now excluded from the fingerprint so saved labels survive restarts.
+		* Improved fingerprinting for Electron and WebView2 content using ARIA properties and role, making label assignments more stable across page reloads."""),
 	# Author(s)
 	addon_author="Kefas Lungu <jameskefaslungu@gmail.com>",
 	# URL for the add-on documentation support
@@ -43,9 +42,9 @@ addon_info = AddonInfo(
 	# Documentation file name
 	addon_docFileName="readme.html",
 	# Minimum NVDA version supported (e.g. "2019.3.0", minor version is optional)
-	addon_minimumNVDAVersion="2025.1",
+	addon_minimumNVDAVersion="2026.1",
 	# Last NVDA version supported/tested (e.g. "2024.4.0", ideally more recent than minimum version)
-	addon_lastTestedNVDAVersion="2026.1",
+	addon_lastTestedNVDAVersion="2026.2",
 	# Add-on update channel (default is None, denoting stable releases,
 	# and for development releases, use "dev".)
 	# Do not change unless you know what you are doing!

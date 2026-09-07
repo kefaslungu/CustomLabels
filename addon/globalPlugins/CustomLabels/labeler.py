@@ -292,13 +292,13 @@ def makeLabelOverlay(labelText):
 
 
 def _invalidateBrowseModeCache():
-	"""Notify virtualBufferSupport to clear its label caches.
+	"""Notify vbuf to clear its label caches.
 
-	Imported lazily to avoid a circular import (virtualBufferSupport imports labeler).
+	Imported lazily to avoid a circular import (vbuf imports labeler).
 	"""
 	try:
-		from . import virtualBufferSupport
-		virtualBufferSupport.invalidateCacheForLabel(None)
+		from . import vbuf
+		vbuf.invalidateCacheForLabel(None)
 	except Exception:
 		pass
 

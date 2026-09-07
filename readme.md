@@ -2,7 +2,8 @@
 
 * Authors: Kefas Lungu
 
-Note: this add-on requires NVDA 2025.1 or later.
+Note: this version of the add-on requires NVDA 2026.1 or later.
+[View the complete changelog](./changelog.md).
 ## Overview
 
 Custom Labels is an NVDA add-on that allows you to add custom labels for unlabelled controls and edit existing ones. This is particularly useful for applications with buttons or controls that don't have labels or NVDA cannot properly identify.
@@ -90,7 +91,8 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 
 ## Known Limitations
 
-* Web-based applications: For applications built with web technologies (such as the new Outlook, Microsoft Teams, Slack, TeamViewer, WhatsApp, Discord, and other Electron/WebView2 apps), custom labels only work in focus mode. Press NVDA+Space to switch to focus mode before using custom labels in these applications. This is due to how NVDA handles browse mode using a virtual buffer, which does not use the same live objects that custom labels rely on.
+* Web-based applications — Electron and WebView2 apps (such as the new Outlook, Microsoft Teams, Slack, WhatsApp, and Discord): custom labels are now applied in browse mode as well as focus mode. To set or remove a label you must still press NVDA+Space to switch to focus mode first. Regular browsers (Chrome, Firefox, Edge, etc.) are not yet fully supported.
+* Browse mode — label re-announcement: in browse mode on Electron and WebView2 apps, the full label is announced on every arrow key press on a labelled control. Character-by-character reading of the label is not possible. This is a fundamental limitation of how NVDA constructs the virtual buffer internally and cannot be addressed by the add-on alone.
 * Controls with identical properties: If an application has multiple controls of the same type with the same name (or no name), sometimes custom labels cannot distinguish between them. Labelling one will label all matching controls. This is rare in practice, as most applications assign unique identifiers to their controls.
 
 ## Contributors
@@ -101,27 +103,3 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 * [George-br (@George-br)](https://github.com/George-br): Added Ukrainian translation. ([#6](https://github.com/kefaslungu/CustomLabels/pull/6))
 * Brell Rainer (Rainer.Brell@bfw-wuerzburg.de): Added German translations.
 
-## Changelog
-
-### Version 2026.2
-
-* Fixed a bug where a custom label could be silently overwritten by NVDA's internal name assignment.
-* The settings panel tree now preserves expanded and selected state after editing or removing a label.
-* Fixed labelling individual controls in apps where multiple controls share identical properties (e.g. TeamViewer, Electron, WebView2-based apps). Labelling one button no longer labels all buttons of the same type.
-
-### Version 2026.1
-* A release compartable with NVDA 2026.1.
-### Version 2026.02
-
-* Added support for NVDA 2026.1
-* Added Ukrainian, Russian, german and Turkish translations.
-* Improved control identification using original control name.
-* Fixed labels not working in web-based applications (Electron, WebView2).
-* Fixed all buttons getting the same label in some applications.
-* Added support for labelling editable text.
-* Added option to speak description for unlabeled controls, greatly improving accessibility in Java-based applications (Settings > Custom Labels).
-* Added known limitations documentation.
-
-### Version 2026.0
-
-* Initial release
