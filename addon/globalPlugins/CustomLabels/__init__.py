@@ -240,16 +240,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def event_gainFocus(self, obj, nextHandler):
 		"""Ensure the browse mode patch is applied whenever a virtual buffer gains focus.
 
-		The cache for the focused object is pre-populated here, before
-		``nextHandler()`` triggers speech. This ensures that any subsequent call to
-		``_lookupLabel`` from within ``speakTextInfo`` / ``_patchedGetFieldsInRange``
-		is a pure dictionary lookup with no COM object construction on the hot path.
+		The cache for the focused object is pre-populated before ``nextHandler()``
+		so that speech for the focused element is a pure dict lookup.
+		``vbuf.inFocusEvent`` is held ``True`` for the duration of ``nextHandler()``
+		so that any other cache misses triggered by speech (e.g. from a third-party
+		addon calling ``speakTextInfo``) take the safe async path rather than making
+		synchronous COM calls that would deadlock on the main thread.
 		"""
 		ti = getattr(obj, "treeInterceptor", None)
 		if ti is not None:
 			vbuf.ensurePatched(ti)
 			vbuf.preCacheForObject(ti, obj)
-		nextHandler()
+		vbuf.inFocusEvent = True
+		try:
+			nextHandler()
+		finally:
+			vbuf.inFocusEvent = False
 
 	def _openSettingsPanel(self):
 		"""Open NVDA settings to the Custom Labels panel."""

@@ -1,6 +1,6 @@
 # Changelog for custom labels
 
-## Version 2026.2
+## Version 2026.3
 
 * Fixed a bug where a custom label could be silently overwritten by NVDA's internal name assignment.
 * The settings panel tree now preserves expanded and selected state after editing or removing a label.

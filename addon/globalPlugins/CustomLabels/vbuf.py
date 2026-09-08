@@ -27,6 +27,7 @@
 # A per-interceptor cache keyed on (docHandle, ID) -> label|None avoids
 # re-fingerprinting the same object on every arrow key press.
 
+import wx
 import api
 import textInfos
 import treeInterceptorHandler
@@ -45,13 +46,75 @@ _patches: dict = {}
 # id(treeInterceptor) -> treeInterceptor
 _activeInterceptors: dict = {}
 
+# Sentinel stored in the cache while an async lookup is in flight.
+# Prevents duplicate wx.CallAfter calls for the same node.
+_PENDING = object()
+
+# Set to True by GlobalPlugin.event_gainFocus while nextHandler() is on the call
+# stack. During that window the main thread cannot pump COM messages, so
+# getNVDAObjectFromIdentifier must not be called synchronously.
+# False at all other times (arrow navigation, quick nav, etc.) where synchronous
+# COM calls to the browser succeed normally.
+inFocusEvent: bool = False
+
+
+def _populateCacheEntry(treeInterceptor, tiId: int, docHandle: int, ID: int) -> None:
+	"""Resolve and cache the label for one virtual buffer node.
+
+	Runs via ``wx.CallAfter`` so it executes on the main thread once the current
+	event is fully processed and the wx message loop is pumping COM messages.
+	At that point ``getNVDAObjectFromIdentifier`` will not deadlock.
+
+	:param treeInterceptor: The TreeInterceptor that owns the node.
+	:param tiId: ``id(treeInterceptor)``.
+	:param docHandle: The virtual buffer document handle.
+	:param ID: The virtual buffer node identifier.
+	"""
+	cache = _interceptorCaches.get(tiId)
+	if cache is None:
+		return
+	cacheKey = (docHandle, ID)
+	if cache.get(cacheKey) is not _PENDING:
+		return  # Already resolved or interceptor was re-patched
+
+	try:
+		obj = treeInterceptor.getNVDAObjectFromIdentifier(docHandle, ID)
+	except Exception:
+		cache[cacheKey] = None
+		return
+
+	if obj is None:
+		cache[cacheKey] = None
+		return
+
+	try:
+		fp = getObjectFingerprint(obj)
+		label = getLabel(fp) if fp else None
+	except Exception:
+		log.debugWarning("CustomLabels: error fingerprinting browse mode object", exc_info=True)
+		label = None
+
+	cache[cacheKey] = label
+	if label:
+		log.debug(f"CustomLabels [browse]: async-cached label '{label}' for node ({docHandle}, {ID})")
+
 
 def _lookupLabel(treeInterceptor, tiId, docHandle, ID):
 	"""Look up the custom label for a buffer node using the per-interceptor cache.
 
-	Pure dictionary lookup — no COM calls, no object construction.
-	The cache is pre-populated by :meth:`preCacheForObject` when an object gains
-	focus, keeping this function safe to call from the speech path.
+	On a cache hit this is a pure dictionary lookup with no COM calls.
+
+	On a cache miss the behaviour depends on context:
+
+	- **During** ``event_gainFocus`` (``inFocusEvent`` is ``True``): the main thread
+	  cannot pump COM messages, so ``getNVDAObjectFromIdentifier`` would deadlock.
+	  The entry is marked ``_PENDING`` and a ``wx.CallAfter`` is scheduled to resolve
+	  it once the event is done. The label is silent on this visit but present on the
+	  next.
+
+	- **During arrow / quick navigation** (``inFocusEvent`` is ``False``): the main
+	  thread is in a keyboard handler where COM calls to the browser succeed normally.
+	  The lookup is done synchronously so the label is announced on the first visit.
 
 	:param treeInterceptor: The active TreeInterceptor.
 	:param tiId: ``id(treeInterceptor)``, used as the cache key.
@@ -63,7 +126,39 @@ def _lookupLabel(treeInterceptor, tiId, docHandle, ID):
 		cache = _interceptorCaches.get(tiId)
 		if cache is None:
 			return None
-		return cache.get((docHandle, ID))
+		cacheKey = (docHandle, ID)
+		val = cache.get(cacheKey, _PENDING)
+		if val is not _PENDING:
+			return val
+
+		if inFocusEvent:
+			# COM calls would deadlock here — defer to after the event.
+			cache[cacheKey] = _PENDING
+			wx.CallAfter(_populateCacheEntry, treeInterceptor, tiId, docHandle, ID)
+			return None
+
+		# Arrow / quick nav: COM is safe — resolve now so the label is spoken.
+		try:
+			obj = treeInterceptor.getNVDAObjectFromIdentifier(docHandle, ID)
+		except Exception:
+			cache[cacheKey] = None
+			return None
+
+		if obj is None:
+			cache[cacheKey] = None
+			return None
+
+		try:
+			fp = getObjectFingerprint(obj)
+			label = getLabel(fp) if fp else None
+		except Exception:
+			log.debugWarning("CustomLabels: error fingerprinting browse mode object", exc_info=True)
+			label = None
+
+		cache[cacheKey] = label
+		if label:
+			log.debug(f"CustomLabels [browse]: cached label '{label}' for node ({docHandle}, {ID})")
+		return label
 	except Exception:
 		return None
 
