@@ -23,16 +23,11 @@ addon_info = AddonInfo(
 	# Translators: Long description to be shown for this add-on on add-on information from add-on store
 	addon_description=_("""An addon that allows you to add custom labels for unlabeled controls and edit existing ones."""),
 	# version
-	addon_version="2026.3",
+	addon_version="2026.3.1",
 	# Brief changelog for this version
 	# Translators: what's new content for the add-on version to be shown in the add-on store
 	addon_changelog=_("""
-		* Fixed a bug where a custom label could be silently overwritten by NVDA's internal name assignment.
-		* The settings panel tree now preserves expanded and selected state after editing or removing a label.
-		* Fixed labelling individual controls in apps where multiple controls share identical properties. Labelling one button no longer labels all buttons of the same type.
-		* Added browse mode (virtual buffer) support for Electron and WebView2-based applications: custom labels are now applied when reading content with arrow keys or quick navigation, not only in focus mode. Regular browsers are not yet supported.
-		* Fixed labels failing to match after an application restart in Electron and WebView2-based apps. The volatile renderer-window identifier is now excluded from the fingerprint so saved labels survive restarts.
-		* Improved fingerprinting for Electron and WebView2 content using ARIA properties and role, making label assignments more stable across page reloads."""),
+		* Fixed a performance regression where navigating in browse mode or opening the Elements List (NVDA+F7) in applications with no custom labels caused unnecessary COM queries for every node in the virtual buffer."""),
 	# Author(s)
 	addon_author="Kefas Lungu <jameskefaslungu@gmail.com>",
 	# URL for the add-on documentation support

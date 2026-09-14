@@ -91,7 +91,7 @@ Labels are stored in JSON files in NVDA's configuration directory under a `custo
 
 ## Known Limitations
 
-* Web-based applications — Electron and WebView2 apps (such as the new Outlook, Microsoft Teams, Slack, WhatsApp, and Discord): custom labels are now applied in browse mode as well as focus mode. To set or remove a label you must still press NVDA+Space to switch to focus mode first. Regular browsers (Chrome, Firefox, Edge, etc.) are not yet fully supported.
+* Web-based applications — Electron and WebView2 apps (such as the new Outlook, Microsoft Teams, Slack, WhatsApp, and Discord): custom labels are now applied in browse mode as well as focus mode. To set or remove a label you must still press NVDA+Space to switch to focus mode first. Regular browsers (Chrome, Firefox, Edge, etc.) are not supported.
 * Browse mode — label re-announcement: in browse mode on Electron and WebView2 apps, the full label is announced on every arrow key press on a labelled control. Character-by-character reading of the label is not possible. This is a fundamental limitation of how NVDA constructs the virtual buffer internally and cannot be addressed by the add-on alone.
 * Controls with identical properties: If an application has multiple controls of the same type with the same name (or no name), sometimes custom labels cannot distinguish between them. Labelling one will label all matching controls. This is rare in practice, as most applications assign unique identifiers to their controls.
 

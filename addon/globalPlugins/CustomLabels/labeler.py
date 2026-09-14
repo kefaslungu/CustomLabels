@@ -214,6 +214,11 @@ class LabelStore:
 		self._loadApp(appName)
 		return dict(self._cache.get(appName, {}))
 
+	def hasLabelsForApp(self, appName: str) -> bool:
+		"""Return True if appName has at least one custom label."""
+		self._loadApp(appName)
+		return bool(self._cache.get(appName))
+
 	def removeApp(self, appName):
 		"""Remove all labels for an app."""
 		self._loadApp(appName)
@@ -307,6 +312,10 @@ def _invalidateBrowseModeCache():
 
 def getLabel(fingerprint):
 	return labelStore.get(fingerprint)
+
+
+def hasLabelsForApp(appName: str) -> bool:
+	return labelStore.hasLabelsForApp(appName)
 
 
 def setLabel(fingerprint, label):

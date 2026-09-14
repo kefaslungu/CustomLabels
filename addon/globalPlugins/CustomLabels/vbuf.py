@@ -34,7 +34,7 @@ import treeInterceptorHandler
 from logHandler import log
 
 from .fingerPrintReader import getObjectFingerprint
-from .labeler import getLabel
+from .labeler import getLabel, hasLabelsForApp
 
 
 # id(treeInterceptor) -> {(docHandle, ID): label or None}
@@ -221,6 +221,15 @@ def _makeGetFieldsInRange(originalMethod, treeInterceptor):
 		# Skip in focus/passThrough mode — chooseNVDAObjectOverlayClasses handles it.
 		if treeInterceptor.passThrough:
 			return commandList
+
+		# If this app has no custom labels there is nothing to substitute.
+		# Avoids all COM calls on unlabelled apps (the common case for most users).
+		rootObj = getattr(treeInterceptor, "rootNVDAObject", None)
+		if rootObj is not None:
+			appModule = getattr(rootObj, "appModule", None)
+			appName = getattr(appModule, "appName", None)
+			if appName and not hasLabelsForApp(appName):
+				return commandList
 
 		# labelStack entries: (label_or_None, controlStart_offset)
 		# controlStart_offset is the first buffer offset of the control's text content.
